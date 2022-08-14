@@ -2,38 +2,43 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:spice_blog/auth/datasource/auth_repository.dart';
 import 'package:spice_blog/auth/logic/validators.dart';
-import 'package:spice_blog/auth/screens/sign_up.dart';
-import 'package:spice_blog/blogs/screens/blogs.dart';
+import 'package:spice_blog/auth/screens/sign_in.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final AuthRepository repo = AuthRepository();
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
 
   bool _showPassword = false;
 
-  Future<void> signIn() async {
-    final user = await repo.signIn(
-        email: _emailController.text, password: _passwordController.text);
+  Future<void> signUp() async {
+    final isSuccess = await repo.signUp(
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
 
     if (mounted) {
-      if (user != null) {
+      if (isSuccess) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const BlogFeed()));
+            .push(MaterialPageRoute(builder: (context) => const SignInPage()));
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("User not found")));
+            .showSnackBar(const SnackBar(content: Text("Some error occured!")));
       }
     }
   }
@@ -42,6 +47,8 @@ class _SignInPageState extends State<SignInPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     super.dispose();
   }
 
@@ -58,8 +65,18 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             children: [
               const Text(
-                'Sign In to Spice Blog',
+                'Sign Up for Spice Blog',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const VerticalSpacing(),
+              InputField(
+                controller: _firstNameController,
+                labelText: 'First Name',
+              ),
+              const VerticalSpacing(),
+              InputField(
+                controller: _lastNameController,
+                labelText: 'Last Name',
               ),
               const VerticalSpacing(),
               InputField(
@@ -95,7 +112,7 @@ class _SignInPageState extends State<SignInPage> {
               ElevatedButton.icon(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    signIn();
+                    signUp();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Please check the inputs')));
@@ -105,22 +122,22 @@ class _SignInPageState extends State<SignInPage> {
                   padding: const EdgeInsets.all(16.0),
                 ),
                 icon: const Icon(Icons.login),
-                label: const Text('Sign In'),
+                label: const Text('Sign Up'),
               ),
               const VerticalSpacing(),
               RichText(
                 text: TextSpan(
-                    text: 'Not a user yet?',
+                    text: 'Already a user?',
                     style: const TextStyle(color: Colors.black, fontSize: 12),
                     children: [
                       TextSpan(
-                          text: ' Sign Up ',
+                          text: ' Sign In ',
                           style: const TextStyle(color: Colors.blue),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => const SignUpPage()),
+                                    builder: (context) => const SignInPage()),
                               );
                             }),
                       const TextSpan(text: 'instead.'),

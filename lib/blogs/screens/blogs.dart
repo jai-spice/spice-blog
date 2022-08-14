@@ -37,6 +37,19 @@ class _BlogFeedState extends State<BlogFeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          title: const Text(
+            'All Blogs',
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0.25,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.black),
+              onPressed: fetchAllBlogs,
+            )
+          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.of(context).push(
@@ -45,23 +58,30 @@ class _BlogFeedState extends State<BlogFeed> {
         },
         child: const Icon(Icons.add),
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemBuilder: (context, index) => ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => BlogDetails(blog: _blogs[index]),
-                    ),
-                  );
-                },
-                title: Text(_blogs[index].title),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await fetchAllBlogs();
+        },
+        child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemBuilder: (context, index) => ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BlogDetails(blog: _blogs[index]),
+                      ),
+                    );
+                  },
+                  leading: Image.network(_blogs[index].imageUrl),
+                  title: Text(_blogs[index].title),
+                ),
+                itemCount: _blogs.length,
               ),
-              itemCount: _blogs.length,
-            ),
+      ),
     );
   }
 }

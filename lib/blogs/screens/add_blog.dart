@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spice_blog/auth/datasource/auth_repository.dart';
 import 'package:spice_blog/blogs/datasource/blog_repository.dart';
 import 'package:spice_blog/blogs/datasource/models.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
@@ -13,6 +14,7 @@ class AddBlogPage extends StatefulWidget {
 
 class _AddBlogPageState extends State<AddBlogPage> {
   final BlogRepository repo = BlogRepository();
+  final AuthRepository _authRepo = AuthRepository();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
@@ -25,8 +27,8 @@ class _AddBlogPageState extends State<AddBlogPage> {
         title: _titleController.text,
         content: _contentController.text,
         imageUrl: _imageController.text,
-        author: const Author(email: 'jai@spice.com', photoUrl: ""),
-        updateOn: "12-Aug-2022",
+        author: Author(email: _authRepo.currentUser!.email, photoUrl: ""),
+        updatedAt: DateTime.now(),
       );
 
       setState(() {
@@ -65,6 +67,11 @@ class _AddBlogPageState extends State<AddBlogPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text(
+                'Add Blog',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const VerticalSpacing(),
               InputField(
                 controller: _titleController,
                 hintText: 'Title',

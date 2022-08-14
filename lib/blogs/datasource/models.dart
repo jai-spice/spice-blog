@@ -3,15 +3,30 @@ class Blog {
   final String content;
   final String imageUrl;
   final Author author;
-  final String updateOn;
+  final DateTime updatedAt;
 
   const Blog({
     required this.title,
     required this.content,
     required this.imageUrl,
     required this.author,
-    required this.updateOn,
+    required this.updatedAt,
   });
+
+  Map toJson() => {
+        'title': title,
+        'content': content,
+        'imageUrl': Uri.encodeFull(imageUrl),
+        'email': Uri.encodeFull(author.email),
+      };
+
+  factory Blog.fromJson(Map<String, dynamic> json) => Blog(
+        title: json['title'],
+        content: json['content'],
+        imageUrl: json['imageurl'],
+        author: Author(email: json['email'], photoUrl: ""),
+        updatedAt: DateTime.parse(json["updatedat"]),
+      );
 }
 
 class Author {

@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:spice_blog/blogs/datasource/models.dart';
+import 'package:spice_blog/common/network_client/network_client.dart';
 
 class BlogRepository {
   static BlogRepository? _instance;
@@ -8,15 +12,18 @@ class BlogRepository {
     return _instance!;
   }
 
-  final List<Blog> _blogs = <Blog>[];
-
   Future<List<Blog>> fetchAllBlogs() async {
-    await Future.delayed(const Duration(seconds: 2)); // Thread.sleep
-    return _blogs;
+    final res = await NetworkClient.get('fetchAllBlogs');
+    try {
+      final data = json.decode(res.body);
+      return data.map<Blog>((e) => Blog.fromJson(e)).toList();
+    } catch (_) {
+      return <Blog>[];
+    }
   }
 
   Future<void> addBlog(Blog blog) async {
-    await Future.delayed(const Duration(seconds: 2));
-    _blogs.add(blog);
+    final res = await NetworkClient.post('addBlog', data: blog.toJson());
+    log(res.body);
   }
 }
