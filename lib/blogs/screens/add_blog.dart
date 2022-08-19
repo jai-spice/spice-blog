@@ -74,18 +74,21 @@ class _AddBlogPageState extends State<AddBlogPage> {
               ),
               const VerticalSpacing(),
               InputField(
+                onChanged: (s) {},
                 controller: _titleController,
                 hintText: 'Title',
                 labelText: 'Title',
               ),
               const VerticalSpacing(),
               InputField(
+                onChanged: (s) {},
                 controller: _contentController,
                 hintText: 'Content',
                 labelText: 'Content',
               ),
               const VerticalSpacing(),
               InputField(
+                onChanged: (s) {},
                 controller: _imageController,
                 hintText: 'Image Url',
                 labelText: 'Image Url',

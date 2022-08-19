@@ -19,12 +19,15 @@ class _SignInPageState extends State<SignInPage> {
   late final SignInBloc bloc;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final provider = SignInBlocProvider.of(context);
-    if (provider != null) {
-      bloc = provider.bloc;
-    }
+  void initState() {
+    super.initState();
+    bloc = SignInBloc();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 
   @override

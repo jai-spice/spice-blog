@@ -40,4 +40,13 @@ mixin Validators {
       sink.add(event);
     }
   });
+
+  StreamTransformer<String?, String?> validateName =
+      StreamTransformer.fromHandlers(handleData: (event, sink) {
+    if (event == null || event.length < 2) {
+      sink.addError('Name must be of atleast 2 characters');
+    } else {
+      sink.add(event);
+    }
+  });
 }
