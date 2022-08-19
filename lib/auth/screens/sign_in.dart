@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_up.dart';
+import 'package:spice_blog/blogs/screens/blogs.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
 import 'package:spice_blog/main.dart';
@@ -18,22 +19,12 @@ class _SignInPageState extends State<SignInPage> {
   late final SignInBloc bloc;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final provider = SignInBlocProvider.of(context);
     if (provider != null) {
       bloc = provider.bloc;
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -96,7 +87,21 @@ class _SignInPageState extends State<SignInPage> {
                   builder: (context, snapshot) {
                     final isValid = snapshot.data ?? false;
                     return ElevatedButton.icon(
-                      onPressed: isValid ? bloc.signIn : null,
+                      onPressed: isValid
+                          ? () async {
+                              if (await bloc.signIn()) {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const BlogFeed()));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('User not found')),
+                                );
+                              }
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(16.0),
                       ),

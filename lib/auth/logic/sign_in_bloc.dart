@@ -9,8 +9,6 @@ import 'package:spice_blog/common/observable/observable.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignInBloc with Validators {
-  StreamSubscription? _sub;
-
   SignInBloc() {
     email = Observable(validator: validateEmail);
     password = Observable(validator: validatePassword);
@@ -24,14 +22,13 @@ class SignInBloc with Validators {
   Stream<bool> get validInputObs$ =>
       Rx.combineLatest2(email.obs$, password.obs$, (a, b) => true);
 
-  Future<void> signIn() async {
-    await AuthRepository()
+  Future<bool> signIn() async {
+    final user = await AuthRepository()
         .signIn(email: email.value!, password: password.value!);
+    return user != null;
   }
 
   void dispose() {
-    _sub?.cancel();
-    _sub = null;
     email.dispose();
     password.dispose();
     passwordObscure.dispose();
