@@ -25,7 +25,7 @@ class BlogDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(blog.updatedAt.toIso8601String()),
+                Text(blog.updatedAt.getFormattedDate()),
                 const SizedBox(
                   width: 48,
                 ),
@@ -40,5 +40,11 @@ class BlogDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension FormatDateExt on DateTime {
+  String getFormattedDate() {
+    return "${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year";
   }
 }

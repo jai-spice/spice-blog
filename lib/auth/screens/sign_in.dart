@@ -1,11 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:spice_blog/auth/datasource/auth_repository.dart';
-import 'package:spice_blog/auth/logic/validators.dart';
+import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_up.dart';
-import 'package:spice_blog/blogs/screens/blogs.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
+import 'package:spice_blog/main.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -15,33 +14,25 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final AuthRepository repo = AuthRepository();
   final GlobalKey<FormState> _formKey = GlobalKey();
+  late final SignInBloc bloc;
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  bool _showPassword = false;
-
-  Future<void> signIn() async {
-    final user = await repo.signIn(
-        email: _emailController.text, password: _passwordController.text);
-
-    if (mounted) {
-      if (user != null) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const BlogFeed()));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("User not found")));
-      }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final provider = SignInBlocProvider.of(context);
+    if (provider != null) {
+      bloc = provider.bloc;
     }
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -62,51 +53,57 @@ class _SignInPageState extends State<SignInPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const VerticalSpacing(),
-              InputField(
-                controller: _emailController,
-                validator: (value) {
-                  return value.validateAsEmail();
-                },
-                hintText: 'for e.g., abc@xyz.com',
-                labelText: 'Email ID',
-              ),
+              StreamBuilder<String?>(
+                  stream: bloc.email.obs$,
+                  builder: (context, snapshot) {
+                    return InputField(
+                      onChanged: bloc.email.addValue,
+                      hintText: 'for e.g., abc@xyz.com',
+                      labelText: 'Email ID',
+                      errorText: snapshot.error as String?,
+                    );
+                  }),
               const VerticalSpacing(),
-              InputField(
-                controller: _passwordController,
-                validator: (value) {
-                  return value.validateAsPassword();
-                },
-                suffixIcon: InkWell(
-                  child: _showPassword
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
-                  onTap: () {
-                    setState(() {
-                      _showPassword = !_showPassword;
-                    });
-                  },
-                ),
-                obscureText: !_showPassword,
-                hintText:
-                    'Must have at least one uppercase letter, one lowercase letter and one number',
-                labelText: 'Password',
-              ),
+              StreamBuilder(
+                  stream: bloc.password.obs$,
+                  builder: (context, snapshot) {
+                    return StreamBuilder<bool>(
+                        stream: bloc.passwordObscure.obs$,
+                        initialData: true,
+                        builder: (context, obscureSnap) {
+                          return InputField(
+                            onChanged: bloc.password.addValue,
+                            suffixIcon: InkWell(
+                              child: !obscureSnap.data!
+                                  ? const Icon(Icons.visibility_off)
+                                  : const Icon(Icons.visibility),
+                              onTap: () {
+                                bloc.passwordObscure
+                                    .addValue(!obscureSnap.data!);
+                              },
+                            ),
+                            obscureText: obscureSnap.data,
+                            errorText: snapshot.error as String?,
+                            hintText:
+                                'Must have at least one uppercase letter, one lowercase letter and one number',
+                            labelText: 'Password',
+                          );
+                        });
+                  }),
               const VerticalSpacing(),
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    signIn();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Please check the inputs')));
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(16.0),
-                ),
-                icon: const Icon(Icons.login),
-                label: const Text('Sign In'),
-              ),
+              StreamBuilder<bool>(
+                  stream: bloc.validInputObs$,
+                  builder: (context, snapshot) {
+                    final isValid = snapshot.data ?? false;
+                    return ElevatedButton.icon(
+                      onPressed: isValid ? bloc.signIn : null,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(16.0),
+                      ),
+                      icon: const Icon(Icons.login),
+                      label: const Text('Sign In'),
+                    );
+                  }),
               const VerticalSpacing(),
               RichText(
                 text: TextSpan(

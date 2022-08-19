@@ -5,8 +5,9 @@ class InputField extends StatelessWidget {
   final String? hintText;
   final String? labelText;
   final Widget? suffixIcon;
+  final String? errorText;
   final bool? obscureText;
-  final String? Function(String?)? validator;
+  final void Function(String?)? onChanged;
 
   const InputField({
     Key? key,
@@ -15,21 +16,22 @@ class InputField extends StatelessWidget {
     this.labelText,
     this.suffixIcon,
     this.obscureText,
-    this.validator,
+    this.errorText,
+    this.onChanged,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: validator,
-      autovalidateMode: AutovalidateMode.disabled,
+    return TextField(
       controller: controller,
+      onChanged: onChanged,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
         hintText: hintText,
         labelText: labelText,
         suffixIcon: suffixIcon,
+        errorText: errorText,
       ),
     );
   }

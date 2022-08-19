@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:spice_blog/auth/datasource/auth_repository.dart';
-import 'package:spice_blog/auth/logic/validators.dart';
 import 'package:spice_blog/auth/screens/sign_in.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
@@ -81,18 +80,12 @@ class _SignUpPageState extends State<SignUpPage> {
               const VerticalSpacing(),
               InputField(
                 controller: _emailController,
-                validator: (value) {
-                  return value.validateAsEmail();
-                },
                 hintText: 'for e.g., abc@xyz.com',
                 labelText: 'Email ID',
               ),
               const VerticalSpacing(),
               InputField(
                 controller: _passwordController,
-                validator: (value) {
-                  return value.validateAsPassword();
-                },
                 suffixIcon: InkWell(
                   child: _showPassword
                       ? const Icon(Icons.visibility_off)

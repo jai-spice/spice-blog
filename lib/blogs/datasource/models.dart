@@ -1,4 +1,5 @@
 class Blog {
+  final int? id;
   final String title;
   final String content;
   final String imageUrl;
@@ -6,6 +7,7 @@ class Blog {
   final DateTime updatedAt;
 
   const Blog({
+    this.id,
     required this.title,
     required this.content,
     required this.imageUrl,
@@ -21,6 +23,7 @@ class Blog {
       };
 
   factory Blog.fromJson(Map<String, dynamic> json) => Blog(
+        id: json['id'],
         title: json['title'],
         content: json['content'],
         imageUrl: json['imageurl'],

@@ -43,8 +43,9 @@ class _AddBlogPageState extends State<AddBlogPage> {
       });
     }
 
-    // ignore: use_build_context_synchronously
-    Navigator.of(context).pop();
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override

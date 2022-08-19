@@ -76,8 +76,18 @@ class _BlogFeedState extends State<BlogFeed> {
                       ),
                     );
                   },
+                  trailing: IconButton(
+                      onPressed: () async {
+                        final isDeleted =
+                            await repo.deleteBlog(_blogs[index].id!);
+                        if (isDeleted) {
+                          fetchAllBlogs();
+                        }
+                      },
+                      icon: const Icon(Icons.delete)),
                   leading: Image.network(_blogs[index].imageUrl),
                   title: Text(_blogs[index].title),
+                  subtitle: Text('by ${_blogs[index].author.email}'),
                 ),
                 itemCount: _blogs.length,
               ),
