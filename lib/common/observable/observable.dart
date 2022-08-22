@@ -6,7 +6,7 @@ class Observable<T> {
   final StreamTransformer<T, T>? validator;
   //
   Observable({this.validator}) {
-    _controller = BehaviorSubject();
+    _controller = BehaviorSubject(); // Behavior, Replay, Publish
   }
 
   Observable.seeded(T seed, {this.validator}) {

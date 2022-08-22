@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spice_blog/blogs/datasource/blog_repository.dart';
 import 'package:spice_blog/blogs/datasource/models.dart';
+import 'package:spice_blog/blogs/logic/blog_feed_bloc.dart';
 import 'package:spice_blog/blogs/screens/add_blog.dart';
 import 'package:spice_blog/blogs/screens/blog_details.dart';
 
@@ -12,86 +12,73 @@ class BlogFeed extends StatefulWidget {
 }
 
 class _BlogFeedState extends State<BlogFeed> {
-  final BlogRepository repo = BlogRepository();
-
-  List<Blog> _blogs = [];
-  bool _isLoading = false;
-
-  Future<void> fetchAllBlogs() async {
-    setState(() {
-      _isLoading = true;
-    });
-    final List<Blog> blogs = await repo.fetchAllBlogs();
-    setState(() {
-      _blogs = blogs;
-      _isLoading = false;
-    });
-  }
+  late final BlogFeedBloc bloc;
 
   @override
   void initState() {
     super.initState();
-    fetchAllBlogs();
+    bloc = BlogFeedBloc();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-            'All Blogs',
-            style: TextStyle(color: Colors.black),
-          ),
-          backgroundColor: Colors.white,
-          elevation: 0.25,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.black),
-              onPressed: fetchAllBlogs,
-            )
-          ]),
+        title: const Text(
+          'All Blogs',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.25,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const AddBlogPage()));
-          fetchAllBlogs();
         },
         child: const Icon(Icons.add),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await fetchAllBlogs();
-        },
-        child: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                padding: const EdgeInsets.all(16.0),
-                itemBuilder: (context, index) => ListTile(
+      body: StreamBuilder<List<Blog>>(
+          stream: bloc.blogs.obs$,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const CircularProgressIndicator();
+            }
+
+            final blogs = snapshot.data!;
+            return ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemBuilder: (context, index) {
+                final blog = blogs[index];
+                return ListTile(
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => BlogDetails(blog: _blogs[index]),
+                        builder: (context) => BlogDetails(blog: blog),
                       ),
                     );
                   },
                   trailing: IconButton(
-                      onPressed: () async {
-                        final isDeleted =
-                            await repo.deleteBlog(_blogs[index].id!);
-                        if (isDeleted) {
-                          fetchAllBlogs();
-                        }
-                      },
+                      onPressed: () => bloc.deleteBlog(blog.id!),
                       icon: const Icon(Icons.delete)),
-                  leading: Image.network(_blogs[index].imageUrl),
-                  title: Text(_blogs[index].title),
-                  subtitle: Text('by ${_blogs[index].author.email}'),
-                ),
-                itemCount: _blogs.length,
-              ),
-      ),
+                  leading: Image.network(
+                    blog.imageUrl,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(blog.title),
+                  subtitle: Text('by ${blog.author.email}'),
+                );
+              },
+              itemCount: blogs.length,
+            );
+          }),
     );
   }
 }

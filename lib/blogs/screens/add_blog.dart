@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spice_blog/auth/datasource/auth_repository.dart';
 import 'package:spice_blog/blogs/datasource/blog_repository.dart';
 import 'package:spice_blog/blogs/datasource/models.dart';
+import 'package:spice_blog/blogs/logic/add_blog_bloc.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
 
@@ -13,46 +14,19 @@ class AddBlogPage extends StatefulWidget {
 }
 
 class _AddBlogPageState extends State<AddBlogPage> {
-  final BlogRepository repo = BlogRepository();
-  final AuthRepository _authRepo = AuthRepository();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
+  late final AddBlogBloc bloc;
 
   bool _isLoading = false;
 
-  Future<void> addBlog() async {
-    if (_titleController.text.length >= 10) {
-      final blog = Blog(
-        title: _titleController.text,
-        content: _contentController.text,
-        imageUrl: _imageController.text,
-        author: Author(email: _authRepo.currentUser!.email, photoUrl: ""),
-        updatedAt: DateTime.now(),
-      );
-
-      setState(() {
-        _isLoading = true;
-      });
-      _titleController.clear();
-      _contentController.clear();
-      _imageController.clear();
-      await repo.addBlog(blog);
-      setState(() {
-        _isLoading = false;
-      });
-    }
-
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
+  @override
+  void initState() {
+    super.initState();
+    bloc = AddBlogBloc();
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
-    _imageController.dispose();
+    bloc.dispose();
     super.dispose();
   }
 
@@ -73,38 +47,81 @@ class _AddBlogPageState extends State<AddBlogPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const VerticalSpacing(),
-              InputField(
-                onChanged: (s) {},
-                controller: _titleController,
-                hintText: 'Title',
-                labelText: 'Title',
+              StreamedInputField(
+                addValue: bloc.title.addValue,
+                title: 'Title',
+                stream: bloc.title.obs$,
               ),
               const VerticalSpacing(),
-              InputField(
-                onChanged: (s) {},
-                controller: _contentController,
-                hintText: 'Content',
-                labelText: 'Content',
+              StreamedInputField(
+                addValue: bloc.content.addValue,
+                title: 'Content',
+                stream: bloc.content.obs$,
               ),
               const VerticalSpacing(),
-              InputField(
-                onChanged: (s) {},
-                controller: _imageController,
-                hintText: 'Image Url',
-                labelText: 'Image Url',
+              StreamedInputField(
+                addValue: bloc.imgUrl.addValue,
+                title: 'Image Url',
+                stream: bloc.imgUrl.obs$,
               ),
               const VerticalSpacing(),
-              ElevatedButton(
-                  onPressed: _isLoading ? null : addBlog,
-                  child: _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(color: Colors.white),
-                        )
-                      : const Text('Add Blog'))
+              StreamBuilder<bool>(
+                  stream: bloc.validInputObs$,
+                  builder: (context, snapshot) {
+                    final isValid = snapshot.data ?? false;
+                    return StreamBuilder<bool>(
+                        stream: bloc.isLoading.obs$,
+                        builder: (context, loadingSnapshot) {
+                          final isLoading = loadingSnapshot.data ?? false;
+                          return ElevatedButton(
+                              onPressed: isLoading || !isValid
+                                  ? null
+                                  : () {
+                                      bloc.isLoading.addValue(true);
+                                      bloc.addBlog().then((_) {
+                                        bloc.isLoading.addValue(false);
+                                        if (mounted) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      });
+                                    },
+                              child: isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : const Text('Add Blog'));
+                        });
+                  })
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class StreamedInputField<T> extends StatelessWidget {
+  final Stream<T> stream;
+  final void Function(String?) addValue;
+  final String title;
+
+  const StreamedInputField({
+    Key? key,
+    required this.stream,
+    required this.addValue,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<T>(
+        stream: stream,
+        builder: (context, snapshot) {
+          return InputField(
+            onChanged: addValue,
+            hintText: title,
+            labelText: title,
+            errorText: snapshot.error as String?,
+          );
+        });
   }
 }
