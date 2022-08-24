@@ -37,6 +37,7 @@ class _BlogFeedState extends State<BlogFeed> {
         backgroundColor: Colors.white,
         elevation: 0.25,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.of(context).push(
@@ -57,6 +58,7 @@ class _BlogFeedState extends State<BlogFeed> {
               itemBuilder: (context, index) {
                 final blog = blogs[index];
                 return ListTile(
+                  key: ValueKey(blog.id),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

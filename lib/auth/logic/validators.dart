@@ -4,8 +4,11 @@ extension Validator on String? {
   String? validateAsEmail() {
     final emailRegex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (this != null && !emailRegex.hasMatch(this!)) {
-      return "Not a valid email";
+
+    if (this != null) {
+      if (!emailRegex.hasMatch(this!)) {
+        return "Not a valid email";
+      }
     }
     return null;
   }

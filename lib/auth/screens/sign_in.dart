@@ -5,7 +5,6 @@ import 'package:spice_blog/auth/screens/sign_up.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
-import 'package:spice_blog/main.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spice_blog/auth/datasource/auth_repository.dart';
+import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_in.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:rxdart/rxdart.dart';
 
 void main() => runApp(const MyApp());
 

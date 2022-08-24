@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spice_blog/auth/datasource/auth_repository.dart';
-import 'package:spice_blog/blogs/datasource/blog_repository.dart';
-import 'package:spice_blog/blogs/datasource/models.dart';
 import 'package:spice_blog/blogs/logic/add_blog_bloc.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
@@ -15,8 +12,6 @@ class AddBlogPage extends StatefulWidget {
 
 class _AddBlogPageState extends State<AddBlogPage> {
   late final AddBlogBloc bloc;
-
-  bool _isLoading = false;
 
   @override
   void initState() {

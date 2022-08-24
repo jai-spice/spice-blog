@@ -4,6 +4,7 @@
 import 'dart:async';
 
 import 'package:spice_blog/auth/datasource/auth_repository.dart';
+import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/logic/validators.dart';
 import 'package:spice_blog/common/observable/observable.dart';
 import 'package:rxdart/rxdart.dart';
