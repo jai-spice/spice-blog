@@ -25,8 +25,8 @@ class _SignUpPageState extends State<SignUpPage> {
     final isSuccess = await bloc.signUp();
     if (mounted) {
       if (isSuccess) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const SignInPage()));
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => const SignInPage()));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Some error occured!")));
@@ -136,10 +136,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: const TextStyle(color: Colors.blue),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const SignInPage()),
-                            );
+                            // Navigator.of(context).pushReplacement(
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const SignInPage(),
+                            //       ),
+                            // );
                           }),
                     const TextSpan(text: 'instead.'),
                   ]),

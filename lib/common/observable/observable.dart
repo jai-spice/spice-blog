@@ -19,7 +19,7 @@ class Observable<T> {
     final stream = _controller.stream;
     if (validator != null) {
       return stream
-          .debounceTime(const Duration(milliseconds: 200))
+          // .debounceTime(const Duration(milliseconds: 200))
           .transform(validator!);
     }
     return stream;

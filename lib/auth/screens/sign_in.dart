@@ -7,30 +7,18 @@ import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  final SignInBloc bloc;
+  const SignInPage({Key? key, required this.bloc}) : super(key: key);
 
   @override
   State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInPageState extends State<SignInPage> with RouteAware {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  late final SignInBloc bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    bloc = SignInBloc();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bloc = widget.bloc;
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -50,6 +38,7 @@ class _SignInPageState extends State<SignInPage> {
                   stream: bloc.email.obs$,
                   builder: (context, snapshot) {
                     return InputField(
+                      key: const ValueKey('email_input_field'),
                       onChanged: bloc.email.addValue,
                       hintText: 'for e.g., abc@xyz.com',
                       labelText: 'Email ID',
@@ -65,6 +54,7 @@ class _SignInPageState extends State<SignInPage> {
                         initialData: true,
                         builder: (context, obscureSnap) {
                           return InputField(
+                            key: const ValueKey('password_input_field'),
                             onChanged: bloc.password.addValue,
                             suffixIcon: InkWell(
                               child: !obscureSnap.data!
@@ -89,6 +79,7 @@ class _SignInPageState extends State<SignInPage> {
                   builder: (context, snapshot) {
                     final isValid = snapshot.data ?? false;
                     return ElevatedButton.icon(
+                      key: const ValueKey('sign_in_submit_button'),
                       onPressed: isValid
                           ? () async {
                               if (await bloc.signIn()) {

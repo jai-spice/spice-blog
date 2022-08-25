@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/datasource/models.dart';
 
-import 'mocks/mock_auth_repo.dart';
+import '../mocks/mock_auth_repo.dart';
 
 void main() {
   group('AuthRepo Test', () {

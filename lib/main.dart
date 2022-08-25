@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       home: SignInBlocProvider(
         bloc: SignInBloc(),
         child: AuthRepository().currentUser == null
-            ? const SignInPage()
+            ? SignInPage(bloc: SignInBloc())
             : const BlogFeed(),
       ),
     );
