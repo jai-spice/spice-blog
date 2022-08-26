@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/blogs/datasource/models.dart';
 import 'package:spice_blog/blogs/logic/blog_feed_bloc.dart';
 import 'package:spice_blog/blogs/screens/add_blog.dart';
 import 'package:spice_blog/blogs/screens/blog_details.dart';
+import 'package:spice_blog/di.dart';
 
-class BlogFeed extends StatefulWidget {
+final blocProvider = Provider<BlogFeedBloc>((ref) {
+  return BlogFeedBloc(ref.watch(blogRepoProvider));
+});
+
+class BlogFeed extends ConsumerWidget {
   const BlogFeed({Key? key}) : super(key: key);
 
   @override
-  State<BlogFeed> createState() => _BlogFeedState();
-}
-
-class _BlogFeedState extends State<BlogFeed> {
-  late final BlogFeedBloc bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    bloc = BlogFeedBloc();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bloc = ref.watch(blocProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text(

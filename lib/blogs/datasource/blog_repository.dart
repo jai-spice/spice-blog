@@ -14,23 +14,14 @@ abstract class IBlogRepository {
 class BlogRepository implements IBlogRepository {
   final INetworkClient _networkClient;
 
-  static BlogRepository? _instance;
-  WebSocketChannel? _channel;
+  late final WebSocketChannel _channel = WebSocketChannel.connect(
+      Uri.parse('wss://spiceblogserver-production.up.railway.app/ws'));
 
-  BlogRepository._(this._networkClient); // Private Constructor
-  factory BlogRepository() {
-    _instance ??=
-        BlogRepository._(NetworkClient()); // ??= is called Elvis Operator
-
-    _instance!._channel ??= WebSocketChannel.connect(
-        Uri.parse('wss://spiceblogserver-production.up.railway.app/ws'));
-
-    return _instance!;
-  }
+  BlogRepository(this._networkClient); // Private Constructor
 
   @override
   Stream<List<Blog>> fetchAllBlogs() async* {
-    yield* _channel!.stream.map((event) {
+    yield* _channel.stream.map((event) {
       try {
         final data = json.decode(event);
         return data.map<Blog>((e) => Blog.fromJson(e)).toList();

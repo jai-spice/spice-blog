@@ -1,47 +1,32 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/logic/sign_up_bloc.dart';
-import 'package:spice_blog/auth/screens/sign_in.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
+import 'package:spice_blog/di.dart';
 
-class SignUpPage extends StatefulWidget {
+final blocProvider = Provider((ref) => SignUpBloc(ref.watch(authRepoProvider)));
+
+class SignUpPage extends ConsumerWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  late final SignUpBloc bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    bloc = SignUpBloc();
-  }
-
-  Future<void> signUp() async {
-    final isSuccess = await bloc.signUp();
-    if (mounted) {
-      if (isSuccess) {
-        // Navigator.of(context)
-        //     .push(MaterialPageRoute(builder: (context) => const SignInPage()));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Some error occured!")));
-      }
+  Future<void> signUp(
+      Future<bool> Function() signUpFn, BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final isSuccess = await signUpFn();
+    if (isSuccess) {
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => const SignInPage()));
+    } else {
+      messenger
+          .showSnackBar(const SnackBar(content: Text("Some error occured!")));
     }
   }
 
   @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bloc = ref.watch(blocProvider);
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -117,7 +102,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 builder: (context, snapshot) {
                   final isValid = snapshot.data ?? false;
                   return ElevatedButton.icon(
-                    onPressed: isValid ? signUp : null,
+                    onPressed:
+                        isValid ? () => signUp(bloc.signUp, context) : null,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(16.0),
                     ),

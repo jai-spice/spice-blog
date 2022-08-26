@@ -7,13 +7,8 @@ import 'package:spice_blog/common/network_client/network_client.dart';
 class AuthRepository implements IAuthRepository {
   final INetworkClient _networkClient;
 
-  static AuthRepository? _instance;
-  AuthRepository._(this._networkClient); // Private Constructor
-  factory AuthRepository() {
-    _instance ??=
-        AuthRepository._(NetworkClient()); // ??= is called Elvis Operator
-    return _instance!;
-  }
+  AuthRepository(this._networkClient); // Private Constructor
+
   User? _user;
   @override
   User? get currentUser => _user;
