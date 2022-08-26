@@ -4,27 +4,27 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:spice_blog/auth/datasource/auth_repository.dart';
+import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/logic/validators.dart';
 import 'package:spice_blog/common/observable/observable.dart';
 
 class SignInBloc with Validators {
-  SignInBloc() {
-    email = Observable(validator: validateEmail);
-    password = Observable(validator: validatePassword);
-    passwordObscure = Observable.seeded(true);
-  }
+  final IAuthRepository repository;
 
-  late final Observable<String?> email;
-  late final Observable<String?> password;
-  late final Observable<bool> passwordObscure;
+  // Member vars
+  late final Observable<String?> email = Observable(validator: validateEmail);
+  late final Observable<String?> password =
+      Observable(validator: validatePassword);
+  final Observable<bool> passwordObscure = Observable.seeded(true);
+
+  SignInBloc(this.repository);
 
   Stream<bool> get validInputObs$ =>
       Rx.combineLatest2(email.obs$, password.obs$, (a, b) => true);
 
   Future<bool> signIn() async {
-    final user = await AuthRepository()
-        .signIn(email: email.value!, password: password.value!);
+    final user =
+        await repository.signIn(email: email.value!, password: password.value!);
     return user != null;
   }
 

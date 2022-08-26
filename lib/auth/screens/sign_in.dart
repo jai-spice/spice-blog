@@ -1,24 +1,28 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_up.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
+import 'package:spice_blog/di.dart';
 
-class SignInPage extends StatefulWidget {
-  final SignInBloc bloc;
-  const SignInPage({Key? key, required this.bloc}) : super(key: key);
+final blocProvider = Provider((ref) => SignInBloc(ref.watch(authRepoProvider)));
+
+class SignInPage extends ConsumerStatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> with RouteAware {
+class _SignInPageState extends ConsumerState<SignInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    final bloc = widget.bloc;
+    final bloc = ref.watch(blocProvider);
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(

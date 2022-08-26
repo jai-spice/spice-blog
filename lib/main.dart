@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/datasource/auth_repository.dart';
-import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_in.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
+import 'package:spice_blog/di.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const ProviderScope(child: MyApp()));
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authRepo = ref.watch(authRepoProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Spice Blog',
-      home: SignInBlocProvider(
-        bloc: SignInBloc(),
-        child: AuthRepository().currentUser == null
-            ? SignInPage(bloc: SignInBloc())
-            : const BlogFeed(),
-      ),
+      home:
+          authRepo.currentUser == null ? const SignInPage() : const BlogFeed(),
     );
-  }
-}
-
-class SignInBlocProvider extends InheritedWidget {
-  final SignInBloc bloc;
-
-  const SignInBlocProvider(
-      {Key? key, required Widget child, required this.bloc})
-      : super(key: key, child: child);
-
-  static SignInBlocProvider? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SignInBlocProvider>();
-  }
-
-  @override
-  bool updateShouldNotify(SignInBlocProvider oldWidget) {
-    return false;
   }
 }

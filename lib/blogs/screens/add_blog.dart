@@ -1,32 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/blogs/logic/add_blog_bloc.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
+import 'package:spice_blog/di.dart';
 
-class AddBlogPage extends StatefulWidget {
+final blocProvider = Provider.autoDispose((ref) =>
+    AddBlogBloc(ref.watch(blogRepoProvider), ref.watch(authRepoProvider)));
+
+class AddBlogPage extends ConsumerWidget {
   const AddBlogPage({Key? key}) : super(key: key);
 
   @override
-  State<AddBlogPage> createState() => _AddBlogPageState();
-}
-
-class _AddBlogPageState extends State<AddBlogPage> {
-  late final AddBlogBloc bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    bloc = AddBlogBloc();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bloc = ref.watch(blocProvider);
     return Scaffold(
       body: Center(
         child: Padding(
@@ -71,14 +58,11 @@ class _AddBlogPageState extends State<AddBlogPage> {
                           return ElevatedButton(
                               onPressed: isLoading || !isValid
                                   ? null
-                                  : () {
+                                  : () async {
                                       bloc.isLoading.addValue(true);
-                                      bloc.addBlog().then((_) {
-                                        bloc.isLoading.addValue(false);
-                                        if (mounted) {
-                                          Navigator.of(context).pop();
-                                        }
-                                      });
+                                      bloc.addBlog();
+                                      bloc.isLoading.addValue(false);
+                                      Navigator.of(context).pop();
                                     },
                               child: isLoading
                                   ? const CircularProgressIndicator(

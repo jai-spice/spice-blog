@@ -1,48 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
-import 'package:spice_blog/auth/logic/validators.dart';
 import 'package:spice_blog/auth/screens/sign_in.dart';
-import 'package:spice_blog/common/observable/observable.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
+import 'package:spice_blog/di.dart';
 
-import 'sign_in_page_test.mocks.dart';
+import '../mocks/mock_auth_repo.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-class MockValidators with Validators {}
-
-@GenerateMocks([SignInBloc])
 void main() {
   //
-
   testWidgets('SignInPage Widget Test', (WidgetTester tester) async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    //
-    final bloc = MockSignInBloc();
-    final mockValidators = MockValidators();
-    when(bloc.email)
-        .thenReturn(Observable(validator: mockValidators.validateEmail));
-    when(bloc.password)
-        .thenReturn(Observable(validator: mockValidators.validatePassword));
-    when(bloc.passwordObscure).thenReturn(Observable.seeded(true));
-    when(bloc.validInputObs$).thenAnswer((_) =>
-        Rx.combineLatest2(bloc.email.obs$, bloc.password.obs$, (a, b) => true));
-    when(bloc.signIn()).thenAnswer((_) => Future.value(
-        bloc.email.value == 'jai.sachdeva@spicemoney.com' &&
-            bloc.password.value == 'qwerty12'));
-    //
+
     final mockObserver = MockNavigatorObserver();
-    await tester.pumpWidget(MaterialApp(
-      home: SignInPage(bloc: bloc),
-      navigatorObservers: [mockObserver],
+    await tester.pumpWidget(ProviderScope(
+      overrides: [authRepoProvider.overrideWithValue(MockAuthRepo())],
+      child: MaterialApp(
+        home: const SignInPage(),
+        navigatorObservers: [mockObserver],
+      ),
     ));
     //
     final titleFinder = find.text('Sign In to Spice Blog');
     expect(titleFinder, findsOneWidget);
+
+    expect(emailInput, findsOneWidget);
 
     await tester.enterText(emailInput, 'abc');
     await tester.pumpAndSettle(); // setState
@@ -58,7 +43,6 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('sign_in_submit_button')));
     await tester.pumpAndSettle(); // setState
-    verifyNever(bloc.signIn());
 
     await tester.enterText(
         find.byKey(const ValueKey('password_input_field')), 'qiuweiwuqwie');
@@ -75,8 +59,6 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('sign_in_submit_button')));
 
     await tester.pumpAndSettle();
-
-    verify(bloc.signIn());
     verify(mockObserver.didReplace(
         newRoute: anyNamed('newRoute'), oldRoute: anyNamed('oldRoute')));
   });
