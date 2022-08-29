@@ -15,8 +15,9 @@ void main() {
   testWidgets('SignInPage Widget Test', (WidgetTester tester) async {
     TestWidgetsFlutterBinding.ensureInitialized();
     final mockObserver = MockNavigatorObserver();
+
     await tester.pumpWidget(ProviderScope(
-      overrides: [authRepoProvider.overrideWithValue(MockAuthRepo())],
+      overrides: [authRepoProvider.overrideWithValue(mockAuthRepo)],
       child: MaterialApp(
         home: const SignInPage(),
         navigatorObservers: [mockObserver],

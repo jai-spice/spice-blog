@@ -1,15 +1,33 @@
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+
+@GenerateMocks([IAuthRepository])
 import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/datasource/models.dart';
 
-// dummy logic or stubs for testing
-class MockAuthRepo implements IAuthRepository {
-  static MockAuthRepo? _instance;
-  MockAuthRepo._(); // Private Constructor
-  factory MockAuthRepo() {
-    _instance ??= MockAuthRepo._(); // ??= is called Elvis Operator
-    return _instance!;
-  }
+import 'mock_auth_repo.mocks.dart';
 
+final mockAuthRepo = createRepo();
+
+MockIAuthRepository createRepo() {
+  final repo = MockIAuthRepository();
+
+  when(repo.signIn()).thenAnswer((realInvocation) async {
+    if (realInvocation.namedArguments['email'] ==
+            "jai.sachdeva@spicemoney.com" &&
+        realInvocation.namedArguments['password'] == "qwerty12") {
+      return const User(
+          email: "jai.sachdeva@spicemoney.com",
+          firstName: "Jai",
+          lastName: "Sachdeva");
+    }
+    return null;
+  });
+
+  return repo;
+}
+// dummy logic or stubs for testing
+/*
   User? _user;
 
   @override
@@ -22,9 +40,9 @@ class MockAuthRepo implements IAuthRepository {
       _user = const User(
           email: "jai.s@q.com", firstName: "Jai", lastName: "Sachdeva");
 
-      return _user;
-    }
-    return null;
+    
+    
+    
   }
 
   @override
@@ -36,4 +54,4 @@ class MockAuthRepo implements IAuthRepository {
   }) async {
     return true;
   }
-}
+ */
