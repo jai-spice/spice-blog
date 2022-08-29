@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spice_blog/auth/datasource/auth_repository.dart';
-import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_in.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
 import 'package:spice_blog/di.dart';

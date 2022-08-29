@@ -9,7 +9,7 @@ import 'package:spice_blog/auth/logic/validators.dart';
 import 'package:spice_blog/common/observable/observable.dart';
 
 class SignInBloc with Validators {
-  final IAuthRepository repository;
+  final IAuthRepository _repository;
 
   // Member vars
   late final Observable<String?> email = Observable(validator: validateEmail);
@@ -17,14 +17,14 @@ class SignInBloc with Validators {
       Observable(validator: validatePassword);
   final Observable<bool> passwordObscure = Observable.seeded(true);
 
-  SignInBloc(this.repository);
+  SignInBloc(this._repository);
 
   Stream<bool> get validInputObs$ =>
       Rx.combineLatest2(email.obs$, password.obs$, (a, b) => true);
 
   Future<bool> signIn() async {
-    final user =
-        await repository.signIn(email: email.value!, password: password.value!);
+    final user = await _repository.signIn(
+        email: email.value!, password: password.value!);
     return user != null;
   }
 
