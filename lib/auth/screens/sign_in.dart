@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
+import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_up.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
