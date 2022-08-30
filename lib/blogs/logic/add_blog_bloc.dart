@@ -11,11 +11,9 @@ class AddBlogBloc with Validators {
   final IBlogRepository _blogRepository;
   final IAuthRepository _authRepository;
 
-  late final Observable<String?> title = Observable(validator: titleValidator);
-  late final Observable<String?> imgUrl =
-      Observable(validator: imgUrlValidator);
-  late final Observable<String?> content =
-      Observable(validator: contentValidator);
+  late final Observable<String?> title = Observable();
+  late final Observable<String?> imgUrl = Observable();
+  late final Observable<String?> content = Observable();
 
   late final Observable<bool> isLoading = Observable.seeded(false);
 

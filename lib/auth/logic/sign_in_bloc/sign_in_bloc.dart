@@ -1,46 +1,45 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
-import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_event.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_state.dart';
-import 'package:spice_blog/auth/logic/validators.dart';
-import 'package:spice_blog/common/bloc_base.dart';
-import 'package:spice_blog/common/observable/observable.dart';
+import 'package:spice_blog/common/utils/bloc_base.dart';
+import 'package:spice_blog/common/value_objects/email.dart';
+import 'package:spice_blog/di.dart';
 
-class SignInBloc with Validators {
-  final IAuthRepository _repository;
+import '../../../common/value_objects/password.dart';
 
-  // Member vars
-  late final Observable<String?> email = Observable(validator: validateEmail);
-  late final Observable<String?> password =
-      Observable(validator: validatePassword);
-  final Observable<bool> passwordObscure = Observable.seeded(true);
+class SignInBloc extends Bloc<SignInEvent, SignInFormState> {
+  final Ref _ref;
 
-  SignInBloc(this._repository);
-
-  Stream<bool> get validInputObs$ =>
-      Rx.combineLatest2(email.obs$, password.obs$, (a, b) => true);
-
-  Future<bool> signIn() async {
-    final user = await _repository.signIn(
-        email: email.value!, password: password.value!);
-    return user != null;
+  SignInBloc(this._ref) : super(SignInFormState()) {
+    on<UpdateEmailEvent>(_handleUpdateEmailEvent);
+    on<UpdatePasswordEvent>(_handleUpdatePasswordEvent);
+    on<ObscurePasswordEvent>(_handleObscurePasswordEvent);
+    on<SignInPressedEvent>(_handleSignInPressedEvent);
   }
 
-  void dispose() {
-    email.dispose();
-    password.dispose();
-    passwordObscure.dispose();
-  }
-}
-
-class NewSignInBloc extends Bloc<SignInEvent, SignInState> {
-  NewSignInBloc() : super(SignInState.initial()) {
-    on<PressHereEvent>(_handleOnPressHereEvent);
+  FutureOr<void> _handleUpdateEmailEvent(UpdateEmailEvent event) {
+    emit(state.copyWith(email: Email(event.value)));
   }
 
-  _handleOnPressHereEvent(SignInEvent event) {
-    emit(const SignInState("jai@spice.com", "password", true));
+  FutureOr<void> _handleUpdatePasswordEvent(UpdatePasswordEvent event) {
+    emit(state.copyWith(password: Password(event.value)));
+  }
+
+  FutureOr<void> _handleObscurePasswordEvent(ObscurePasswordEvent _) {
+    emit(state.copyWith(isObscure: !state.isObscure));
+  }
+
+  Future<void> _handleSignInPressedEvent(SignInPressedEvent _) async {
+    final user = await _ref
+        .read(authRepoProvider)
+        .signIn(email: state.email.value!, password: state.password.value!);
+
+    if (user != null) {
+      emitDone();
+    } else {
+      emitError("User Not Found");
+    }
   }
 }

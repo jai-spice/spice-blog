@@ -1,26 +1,103 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_bloc.dart';
+import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_event.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_state.dart';
+import 'package:spice_blog/common/value_objects/email.dart';
+import 'package:spice_blog/common/value_objects/password.dart';
+import 'package:spice_blog/di.dart';
+
+import '../mocks/mock_auth_repo.dart';
+
+class Listener<T> extends Mock {
+  void call(T? previous, T value);
+}
 
 void main() {
-  test('Initial state', () async {
-    final NewSignInBloc bloc = NewSignInBloc();
-    await expectLater(bloc.stream, emitsInOrder([isA<SignInState>()]));
-    expect(bloc.state, equals(SignInState.initial()));
-  });
+  group('[SignInBloc] Test', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final listener = Listener();
+    container.listen(authRepoProvider, listener, fireImmediately: true);
+    listener(null, mockAuthRepo);
+    test('Initial state', () async {
+      final bloc = SignInBloc(container.read(authRepoProvider));
+      await expectLater(bloc.stream, emitsInOrder([isA<SignInFormState>()]));
+      expect(bloc.state, equals(SignInFormState()));
+    });
 
-  test('On Press Here Event', () async {
-    final NewSignInBloc bloc = NewSignInBloc();
-    bloc.add(PressHereEvent());
+    test('Valid Input Test', () async {
+      final signInFormState = SignInFormState();
+      final signInFormStateWithEmail = signInFormState.copyWith(
+          email: const Email("jai.sachdeva@spicemoney.com"));
+      final signInFormStateWithValidInput = signInFormStateWithEmail.copyWith(
+          password: const Password("qwerty12"));
+      final signInFormStateWithComplete =
+          signInFormStateWithValidInput.copyWith(isComplete: true);
 
-    await expectLater(
-      bloc.stream,
-      emitsInOrder([
-        SignInState.initial(),
-        const SignInState("jai@spice.com", "password", true),
-      ]),
-    );
+      final SignInBloc bloc = SignInBloc(container.read(authRepoProvider));
+      bloc
+        ..add(const UpdateEmailEvent("jai.sachdeva@spicemoney.com"))
+        ..add(const UpdatePasswordEvent("qwerty12"))
+        ..add(SignInPressedEvent());
+
+      await expectLater(
+        bloc.stream,
+        emitsInOrder([
+          signInFormState,
+          signInFormStateWithEmail,
+          signInFormStateWithValidInput,
+          signInFormStateWithComplete
+        ]),
+      );
+    });
+    test('Wrong Credentials Test', () async {
+      final signInFormState = SignInFormState();
+      final signInFormStateWithEmail = signInFormState.copyWith(
+          email: const Email("jai.sach@spicemoney.com"));
+      final signInFormStateWithValidInput = signInFormStateWithEmail.copyWith(
+          password: const Password("qwerty12"));
+      final signInFormStateWithError =
+          signInFormStateWithValidInput.copyWith(error: "User not found");
+
+      final SignInBloc bloc = SignInBloc(container.read(authRepoProvider));
+      bloc
+        ..add(const UpdateEmailEvent("jai.sach@spicemoney.com"))
+        ..add(const UpdatePasswordEvent("qwerty12"))
+        ..add(SignInPressedEvent());
+
+      await expectLater(
+        bloc.stream,
+        emitsInOrder([
+          signInFormState,
+          signInFormStateWithEmail,
+          signInFormStateWithValidInput,
+          signInFormStateWithError,
+        ]),
+      );
+    });
+    test('Invalid Input Test', () async {
+      final signInFormState = SignInFormState();
+      final signInFormStateWithEmail =
+          signInFormState.copyWith(email: const Email("jai.sach.com"));
+      final signInFormStateWithInvalidInput = signInFormStateWithEmail.copyWith(
+          password: const Password("qwerty1"));
+
+      final SignInBloc bloc = SignInBloc(container.read(authRepoProvider));
+      bloc
+        ..add(const UpdateEmailEvent("jai.sach.com"))
+        ..add(const UpdatePasswordEvent("qwerty1"))
+        ..add(SignInPressedEvent());
+
+      await expectLater(
+        bloc.stream,
+        emitsInOrder([
+          signInFormState,
+          signInFormStateWithEmail,
+          signInFormStateWithInvalidInput,
+        ]),
+      );
+    });
   });
 }

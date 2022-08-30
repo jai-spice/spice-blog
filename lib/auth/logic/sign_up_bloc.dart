@@ -1,36 +1,49 @@
-import 'package:rxdart/rxdart.dart';
-import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
-import 'package:spice_blog/auth/logic/validators.dart';
-import 'package:spice_blog/common/observable/observable.dart';
+import 'dart:async';
 
-class SignUpBloc with Validators {
-  final IAuthRepository _authRepository;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
+import 'package:spice_blog/common/utils/form_bloc.dart';
+import 'package:spice_blog/common/value_objects/email.dart';
+import 'package:spice_blog/common/value_objects/name.dart';
+import 'package:spice_blog/common/value_objects/password.dart';
+import 'package:spice_blog/di.dart';
 
-  late final Observable<String?> firstName =
-      Observable(validator: validateName);
-  late final Observable<String?> lastName = Observable(validator: validateName);
-  late final Observable<String?> email = Observable(validator: validateEmail);
-  late final Observable<String?> password =
-      Observable(validator: validatePassword);
-  late final Observable<bool> passwordObscure = Observable.seeded(true);
+class SignUpBloc extends FormBloc {
+  final Ref _ref;
 
-  SignUpBloc(this._authRepository);
+  static const String FIRST_NAME_KEY = 'firstName';
+  static const String LAST_NAME_KEY = 'lastName';
+  static const String EMAIL_KEY = 'email';
+  static const String PASSWORD_KEY = 'password';
+  static const String IS_OBSCURE_KEY = 'isObscure';
 
-  Stream<bool> get validInputObs$ => Rx.combineLatest(
-      [firstName.obs$, lastName.obs$, email.obs$, password.obs$],
-      (values) => true);
+  SignUpBloc(this._ref)
+      : super(FormState({
+          FIRST_NAME_KEY: const Name(),
+          LAST_NAME_KEY: const Name(),
+          EMAIL_KEY: const Email(),
+          PASSWORD_KEY: const Password(),
+          IS_OBSCURE_KEY: true,
+        }));
 
-  Future<bool> signUp() => _authRepository.signUp(
-        email: email.value!,
-        password: password.value!,
-        firstName: firstName.value!,
-        lastName: lastName.value!,
-      );
+  @override
+  FutureOr<void> handleOnFormLoadEvent(OnFormLoadEvent event) {
+    Logger().i("Loaded Sign Up Form");
+  }
 
-  void dispose() {
-    firstName.dispose();
-    lastName.dispose();
-    email.dispose();
-    password.dispose();
+  @override
+  Future<void> handleOnFormSubmitEvent(OnFormSubmitEvent event) async {
+    final success = await _ref.read(authRepoProvider).signUp(
+          email: state.formValues[EMAIL_KEY].value!,
+          password: state.formValues[PASSWORD_KEY].value!,
+          firstName: state.formValues[FIRST_NAME_KEY].value!,
+          lastName: state.formValues[LAST_NAME_KEY].value!,
+        );
+
+    if (success) {
+      emitDone();
+    } else {
+      emitError("Some Error Occured!");
+    }
   }
 }

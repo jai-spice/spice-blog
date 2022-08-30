@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:spice_blog/auth/screens/sign_in.dart';
+import 'package:spice_blog/auth/screens/dynamic_sign_in.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/di.dart';
 
