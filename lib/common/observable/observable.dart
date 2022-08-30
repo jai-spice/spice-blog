@@ -15,12 +15,13 @@ class Observable<T> {
 
   late final BehaviorSubject<T> _controller;
 
-  Stream<T> get obs$ {
+  ValueStream<T> get obs$ {
     final stream = _controller.stream;
     if (validator != null) {
       return stream
           // .debounceTime(const Duration(milliseconds: 200))
-          .transform(validator!);
+          .transform(validator!)
+          .shareValue();
     }
     return stream;
   }

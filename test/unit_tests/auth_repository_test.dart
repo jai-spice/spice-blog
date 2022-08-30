@@ -7,7 +7,6 @@ import '../mocks/mock_auth_repo.dart';
 void main() {
   group('AuthRepo Test', () {
     final IAuthRepository repo = mockAuthRepo;
-
     test('login test', () async {
       expect(await repo.signIn(email: '', password: ''), null);
 

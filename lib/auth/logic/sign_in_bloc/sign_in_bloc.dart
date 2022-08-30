@@ -1,11 +1,11 @@
-// Bloc => Business Logic Component
-// Bloc -> Statemanagement (library), Bloc -> Design pattern
-
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
+import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_event.dart';
+import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_state.dart';
 import 'package:spice_blog/auth/logic/validators.dart';
+import 'package:spice_blog/common/bloc_base.dart';
 import 'package:spice_blog/common/observable/observable.dart';
 
 class SignInBloc with Validators {
@@ -32,5 +32,15 @@ class SignInBloc with Validators {
     email.dispose();
     password.dispose();
     passwordObscure.dispose();
+  }
+}
+
+class NewSignInBloc extends Bloc<SignInEvent, SignInState> {
+  NewSignInBloc() : super(SignInState.initial()) {
+    on<PressHereEvent>(_handleOnPressHereEvent);
+  }
+
+  _handleOnPressHereEvent(SignInEvent event) {
+    emit(const SignInState("jai@spice.com", "password", true));
   }
 }
