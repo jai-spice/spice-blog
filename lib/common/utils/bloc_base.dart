@@ -10,18 +10,23 @@ import 'package:spice_blog/common/observable/observable.dart';
 
 typedef EventHandler<E> = FutureOr<void> Function(E);
 
+/// [Bloc] class facilitates us with State and Event Observables to make reactive UI
+/// [on] method is used to create EventHandlers.
+/// UI ---sends event --> Event sink ----> Event Handler Subscription --- invokes EventHandler()--->
+/// emit(NEW_STATE) --- UI listens to state stream ---> UI refreshes.
 abstract class Bloc<Event, State> {
   late final Observable<State> _stateObservable;
   late final Observable<Event> _eventObservable = Observable();
 
-  final List<_Handler<Event>> _handlers = [];
+  final List<Type> _handlerTypes = [];
 
+  @protected
   on<E extends Event>(EventHandler<E> handler) {
     // Ensures that only one event handler exists at any given moment for an Event E
-    if (_handlers.any((e) => e.type == E)) {
+    if (_handlerTypes.any((type) => type == E)) {
       throw 'Handler for event $E already exists';
     }
-    _handlers.add(_Handler(type: E, isType: (dynamic e) => e is E));
+    _handlerTypes.add(E);
 
     // Filters out events that are of the type E and listens to them
     _eventObservable.obs$.where((event) => event is E).listen((event) {
@@ -46,20 +51,19 @@ abstract class Bloc<Event, State> {
     _stateObservable.addValue(state);
   }
 
+  @protected
+  void emitDone() {
+    _stateObservable.complete();
+  }
+
+  @protected
+  void emitError(Object error, [StackTrace? stackTrace]) {
+    _stateObservable.addError(error, stackTrace);
+  }
+
   @mustCallSuper
   void dispose() {
     _stateObservable.dispose();
     _eventObservable.dispose();
   }
-}
-
-/// Helper Class to assert type of event handlers passed
-class _Handler<T> {
-  final Type type;
-  final bool Function(dynamic) isType;
-
-  _Handler({
-    required this.type,
-    required this.isType,
-  });
 }
