@@ -38,11 +38,6 @@ class SignInPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bloc = ref.watch(_blocProvider);
-
-    final emailError = ref.watch(_emailErrorProvider).valueOrNull;
-    final passwordError = ref.watch(_passwordErrorProvider).valueOrNull;
-
     return StreamListener(
       stream: ref.watch(_blocProvider).stream,
       onDone: () {
@@ -62,30 +57,13 @@ class SignInPage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InputField(
-                onChanged: (value) => bloc.add(UpdateEmailEvent(value)),
-                errorText: emailError,
-                labelText: 'Email ID',
-                hintText: 'for e.g., abc@xyz.com',
-              ),
+              const _EmailInput(),
               const VerticalSpacing(),
-              InputField(
-                onChanged: (value) => bloc.add(UpdatePasswordEvent(value)),
-                errorText: passwordError,
-                suffixIcon: InkWell(
-                  child: ref.watch(_obscureProvider).value ?? true
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
-                  onTap: () => bloc.add(ObscurePasswordEvent()),
-                ),
-                obscureText: ref.watch(_obscureProvider).valueOrNull,
-                labelText: 'Password',
-                hintText: 'Must be more than 8 characters in length',
-              ),
+              const _PasswordInput(),
               const VerticalSpacing(),
               ElevatedButton.icon(
                 onPressed: ref.watch(_validInputProvider).value ?? false
-                    ? () => bloc.add(SignInPressedEvent())
+                    ? () => ref.read(_blocProvider).add(SignInPressedEvent())
                     : null,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(16.0),
@@ -96,27 +74,73 @@ class SignInPage extends ConsumerWidget {
               const VerticalSpacing(),
               RichText(
                 text: TextSpan(
-                    text: 'Already a user?',
-                    style: const TextStyle(color: Colors.black, fontSize: 12),
-                    children: [
-                      TextSpan(
-                          text: ' Sign In ',
-                          style: const TextStyle(color: Colors.blue),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUpPage(),
-                                ),
-                              );
-                            }),
-                      const TextSpan(text: 'instead.'),
-                    ]),
+                  text: 'Already a user?',
+                  style: const TextStyle(color: Colors.black, fontSize: 12),
+                  children: [
+                    TextSpan(
+                        text: ' Sign In ',
+                        style: const TextStyle(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const SignUpPage(),
+                              ),
+                            );
+                          }),
+                    const TextSpan(text: 'instead.'),
+                  ],
+                ),
               ),
             ],
           ),
         )),
       ),
+    );
+  }
+}
+
+class _PasswordInput extends ConsumerWidget {
+  const _PasswordInput({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final passwordError = ref.watch(_passwordErrorProvider).valueOrNull;
+    final obscureText = ref.watch(_obscureProvider).valueOrNull;
+    return InputField(
+      onChanged: (value) =>
+          ref.read(_blocProvider).add(UpdatePasswordEvent(value)),
+      errorText: passwordError,
+      suffixIcon: InkWell(
+        child: ref.watch(_obscureProvider).value ?? true
+            ? const Icon(Icons.visibility_off)
+            : const Icon(Icons.visibility),
+        onTap: () => ref.read(_blocProvider).add(ObscurePasswordEvent()),
+      ),
+      obscureText: obscureText,
+      labelText: 'Password',
+      hintText: 'Must be more than 8 characters in length',
+    );
+  }
+}
+
+class _EmailInput extends ConsumerWidget {
+  const _EmailInput({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final emailError = ref.watch(_emailErrorProvider).valueOrNull;
+
+    return InputField(
+      onChanged: (value) =>
+          ref.read(_blocProvider).add(UpdateEmailEvent(value)),
+      errorText: emailError,
+      labelText: 'Email ID',
+      hintText: 'for e.g., abc@xyz.com',
     );
   }
 }

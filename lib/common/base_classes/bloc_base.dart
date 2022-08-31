@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:spice_blog/common/observable/observable.dart';
+import 'package:spice_blog/common/base_classes/observable.dart';
 
 // we want a function signature which allows us to create onEventHandlers
 
@@ -29,9 +29,7 @@ abstract class Bloc<Event, State> {
     _handlerTypes.add(E);
 
     // Filters out events that are of the type E and listens to them
-    _eventObservable.obs$.where((event) => event is E).listen((event) {
-      handler(event as E);
-    });
+    _eventObservable.obs$.whereType<E>().listen(handler);
   }
 
   Bloc(State initialState) {

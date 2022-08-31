@@ -1,4 +1,6 @@
-import 'package:spice_blog/common/utils/value_object.dart';
+library form;
+
+import 'package:spice_blog/common/base_classes/value_object.dart';
 
 class Password extends ValueObject<String?> {
   const Password([super.value]);
@@ -14,7 +16,7 @@ class Password extends ValueObject<String?> {
   }
 
   @override
-  Password copyWith({String? value}) {
+  ValueObject<String?> copyWith({String? value}) {
     return Password(value ?? this.value);
   }
 }

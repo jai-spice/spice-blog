@@ -1,4 +1,6 @@
-import 'package:spice_blog/common/utils/value_object.dart';
+library form;
+
+import 'package:spice_blog/common/base_classes/value_object.dart';
 
 class Email extends ValueObject<String?> {
   const Email([super.value]);
@@ -17,7 +19,7 @@ class Email extends ValueObject<String?> {
   }
 
   @override
-  Email copyWith({String? value}) {
+  ValueObject<String?> copyWith({String? value}) {
     return Email(value ?? this.value);
   }
 }

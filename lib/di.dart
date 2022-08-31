@@ -4,14 +4,8 @@ import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/blogs/datasource/blog_repository.dart';
 import 'package:spice_blog/common/network_client/network_client.dart';
 
-final networkClientProvider = Provider<INetworkClient>((ref) {
-  return NetworkClient();
-});
+final networkClientProvider =
+    Provider<INetworkClient>((ref) => NetworkClient());
 
-final authRepoProvider = Provider<IAuthRepository>((ref) {
-  return AuthRepository(ref.watch(networkClientProvider));
-});
-
-final blogRepoProvider = Provider<IBlogRepository>((ref) {
-  return BlogRepository(ref.watch(networkClientProvider));
-});
+final authRepoProvider = Provider<IAuthRepository>(AuthRepository.new);
+final blogRepoProvider = Provider<IBlogRepository>(BlogRepository.new);

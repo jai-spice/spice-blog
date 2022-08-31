@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/blogs/datasource/models.dart';
-import 'package:spice_blog/common/network_client/network_client.dart';
+import 'package:spice_blog/di.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 abstract class IBlogRepository {
@@ -12,12 +13,12 @@ abstract class IBlogRepository {
 }
 
 class BlogRepository implements IBlogRepository {
-  final INetworkClient _networkClient;
+  final Ref _ref;
 
   late final WebSocketChannel _channel = WebSocketChannel.connect(
       Uri.parse('wss://spiceblogserver-production.up.railway.app/ws'));
 
-  BlogRepository(this._networkClient); // Private Constructor
+  BlogRepository(this._ref); // Private Constructor
 
   @override
   Stream<List<Blog>> fetchAllBlogs() async* {
@@ -33,13 +34,16 @@ class BlogRepository implements IBlogRepository {
 
   @override
   Future<void> addBlog(Blog blog) async {
-    final res = await _networkClient.post('addBlog', data: blog.toJson());
+    final res = await _ref
+        .read(networkClientProvider)
+        .post('addBlog', data: blog.toJson());
     log(res.body);
   }
 
   @override
   Future<bool> deleteBlog(int id) async {
-    final res = await _networkClient.delete('deleteBlog?id=$id');
+    final res =
+        await _ref.read(networkClientProvider).delete('deleteBlog?id=$id');
     return res.statusCode == 200;
   }
 }

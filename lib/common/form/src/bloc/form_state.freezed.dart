@@ -16,7 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$FormState {
+<<<<<<< HEAD
   Map<Enum, FormField> get fields => throw _privateConstructorUsedError;
+=======
+  Map<Enum, dynamic> get formValues => throw _privateConstructorUsedError;
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
 
   @JsonKey(ignore: true)
   $FormStateCopyWith<FormState> get copyWith =>
@@ -27,7 +31,11 @@ mixin _$FormState {
 abstract class $FormStateCopyWith<$Res> {
   factory $FormStateCopyWith(FormState value, $Res Function(FormState) then) =
       _$FormStateCopyWithImpl<$Res>;
+<<<<<<< HEAD
   $Res call({Map<Enum, FormField> fields});
+=======
+  $Res call({Map<Enum, dynamic> formValues});
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
 }
 
 /// @nodoc
@@ -40,6 +48,7 @@ class _$FormStateCopyWithImpl<$Res> implements $FormStateCopyWith<$Res> {
 
   @override
   $Res call({
+<<<<<<< HEAD
     Object? fields = freezed,
   }) {
     return _then(_value.copyWith(
@@ -47,6 +56,15 @@ class _$FormStateCopyWithImpl<$Res> implements $FormStateCopyWith<$Res> {
           ? _value.fields
           : fields // ignore: cast_nullable_to_non_nullable
               as Map<Enum, FormField>,
+=======
+    Object? formValues = freezed,
+  }) {
+    return _then(_value.copyWith(
+      formValues: formValues == freezed
+          ? _value.formValues
+          : formValues // ignore: cast_nullable_to_non_nullable
+              as Map<Enum, dynamic>,
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
     ));
   }
 }
@@ -57,7 +75,11 @@ abstract class _$$_FormStateCopyWith<$Res> implements $FormStateCopyWith<$Res> {
           _$_FormState value, $Res Function(_$_FormState) then) =
       __$$_FormStateCopyWithImpl<$Res>;
   @override
+<<<<<<< HEAD
   $Res call({Map<Enum, FormField> fields});
+=======
+  $Res call({Map<Enum, dynamic> formValues});
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
 }
 
 /// @nodoc
@@ -72,6 +94,7 @@ class __$$_FormStateCopyWithImpl<$Res> extends _$FormStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+<<<<<<< HEAD
     Object? fields = freezed,
   }) {
     return _then(_$_FormState(
@@ -79,6 +102,15 @@ class __$$_FormStateCopyWithImpl<$Res> extends _$FormStateCopyWithImpl<$Res>
           ? _value.fields
           : fields // ignore: cast_nullable_to_non_nullable
               as Map<Enum, FormField>,
+=======
+    Object? formValues = freezed,
+  }) {
+    return _then(_$_FormState(
+      formValues == freezed
+          ? _value.formValues
+          : formValues // ignore: cast_nullable_to_non_nullable
+              as Map<Enum, dynamic>,
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
     ));
   }
 }
@@ -86,6 +118,7 @@ class __$$_FormStateCopyWithImpl<$Res> extends _$FormStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_FormState extends _FormState {
+<<<<<<< HEAD
   const _$_FormState(this.fields) : super._();
 
   @override
@@ -94,6 +127,16 @@ class _$_FormState extends _FormState {
   @override
   String toString() {
     return 'FormState(fields: $fields)';
+=======
+  _$_FormState(this.formValues) : super._();
+
+  @override
+  final Map<Enum, dynamic> formValues;
+
+  @override
+  String toString() {
+    return 'FormState(formValues: $formValues)';
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
   }
 
   @override
@@ -101,12 +144,21 @@ class _$_FormState extends _FormState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FormState &&
+<<<<<<< HEAD
             const DeepCollectionEquality().equals(other.fields, fields));
+=======
+            const DeepCollectionEquality()
+                .equals(other.formValues, formValues));
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
   }
 
   @override
   int get hashCode =>
+<<<<<<< HEAD
       Object.hash(runtimeType, const DeepCollectionEquality().hash(fields));
+=======
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(formValues));
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
 
   @JsonKey(ignore: true)
   @override
@@ -115,11 +167,19 @@ class _$_FormState extends _FormState {
 }
 
 abstract class _FormState extends FormState {
+<<<<<<< HEAD
   const factory _FormState(final Map<Enum, FormField> fields) = _$_FormState;
   const _FormState._() : super._();
 
   @override
   Map<Enum, FormField> get fields;
+=======
+  factory _FormState(final Map<Enum, dynamic> formValues) = _$_FormState;
+  _FormState._() : super._();
+
+  @override
+  Map<Enum, dynamic> get formValues;
+>>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
   @override
   @JsonKey(ignore: true)
   _$$_FormStateCopyWith<_$_FormState> get copyWith =>

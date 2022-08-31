@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:spice_blog/common/value_objects/email.dart';
-import 'package:spice_blog/common/value_objects/password.dart';
+import 'package:spice_blog/common/form/form.dart';
 
 part 'sign_in_state.freezed.dart';
 
