@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/blogs/logic/blog_feed_bloc.dart';
+import 'package:spice_blog/blogs/logic/blog_feed_event.dart';
 import 'package:spice_blog/blogs/screens/add_blog.dart';
 import 'package:spice_blog/blogs/screens/blog_details.dart';
-import 'package:spice_blog/di.dart';
 
-final blocProvider = Provider<BlogFeedBloc>((ref) {
-  return BlogFeedBloc(ref.watch(blogRepoProvider));
-});
+final blocProvider =
+    Provider<BlogFeedBloc>((ref) => BlogFeedBloc(ref)..add(OnFeedLoadEvent()));
 
 final _blogFeedProvider =
-    StreamProvider((ref) => ref.watch(blocProvider).blogs.obs$);
+    StreamProvider((ref) => ref.watch(blocProvider).stream);
 
 class BlogFeed extends ConsumerWidget {
   const BlogFeed({Key? key}) : super(key: key);
@@ -39,7 +38,7 @@ class BlogFeed extends ConsumerWidget {
             data: (blogs) => ListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemBuilder: (context, index) {
-                final blog = blogs[index];
+                final blog = blogs.blogs[index];
                 return ListTile(
                   key: ValueKey(blog.id),
                   onTap: () {
@@ -50,7 +49,7 @@ class BlogFeed extends ConsumerWidget {
                     );
                   },
                   trailing: IconButton(
-                      onPressed: () => bloc.deleteBlog(blog.id!),
+                      onPressed: () => bloc.add(OnDeleteBlogEvent(blog.id!)),
                       icon: const Icon(Icons.delete)),
                   leading: Image.network(
                     blog.imageUrl,
@@ -61,7 +60,7 @@ class BlogFeed extends ConsumerWidget {
                   subtitle: Text('by ${blog.author.email}'),
                 );
               },
-              itemCount: blogs.length,
+              itemCount: blogs.blogs.length,
             ),
             error: (err, _) => Center(
               child: Text(

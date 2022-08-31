@@ -1,4 +1,6 @@
-import 'package:spice_blog/common/utils/value_object.dart';
+library form;
+
+import 'package:spice_blog/common/base_classes/value_object.dart';
 
 class Name extends ValueObject<String?> {
   const Name([super.value]);

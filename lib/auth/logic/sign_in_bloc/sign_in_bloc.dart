@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_event.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_state.dart';
-import 'package:spice_blog/common/utils/bloc_base.dart';
-import 'package:spice_blog/common/value_objects/email.dart';
+import 'package:spice_blog/common/base_classes/bloc_base.dart';
 import 'package:spice_blog/di.dart';
 
-import '../../../common/value_objects/password.dart';
+import 'package:spice_blog/common/form/form.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInFormState> {
   final Ref _ref;
@@ -19,15 +18,15 @@ class SignInBloc extends Bloc<SignInEvent, SignInFormState> {
     on<SignInPressedEvent>(_handleSignInPressedEvent);
   }
 
-  FutureOr<void> _handleUpdateEmailEvent(UpdateEmailEvent event) {
+  void _handleUpdateEmailEvent(UpdateEmailEvent event) {
     emit(state.copyWith(email: Email(event.value)));
   }
 
-  FutureOr<void> _handleUpdatePasswordEvent(UpdatePasswordEvent event) {
+  void _handleUpdatePasswordEvent(UpdatePasswordEvent event) {
     emit(state.copyWith(password: Password(event.value)));
   }
 
-  FutureOr<void> _handleObscurePasswordEvent(ObscurePasswordEvent _) {
+  void _handleObscurePasswordEvent(ObscurePasswordEvent _) {
     emit(state.copyWith(isObscure: !state.isObscure));
   }
 

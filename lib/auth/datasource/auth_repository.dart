@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/datasource/i_auth_repository.dart';
 import 'package:spice_blog/auth/datasource/models.dart';
-import 'package:spice_blog/common/network_client/network_client.dart';
+import 'package:spice_blog/di.dart';
 
 class AuthRepository implements IAuthRepository {
-  final INetworkClient _networkClient;
+  final Ref _ref;
 
-  AuthRepository(this._networkClient); // Private Constructor
+  AuthRepository(this._ref); // Private Constructor
 
   User? _user;
   @override
@@ -16,7 +17,7 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<User?> signIn(
       {required String email, required String password}) async {
-    final response = await _networkClient.post(
+    final response = await _ref.read(networkClientProvider).post(
       'login',
       data: {
         'email': email,
@@ -38,7 +39,7 @@ class AuthRepository implements IAuthRepository {
     required String firstName,
     required String lastName,
   }) async {
-    final response = await _networkClient.post(
+    final response = await _ref.read(networkClientProvider).post(
       'signup',
       data: {
         'email': email,

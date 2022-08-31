@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_up.dart';
 import 'package:spice_blog/blogs/screens/blogs.dart';
-import 'package:spice_blog/common/utils/form_bloc.dart';
+import 'package:spice_blog/common/form/form.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/stream_listener.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
@@ -23,8 +23,8 @@ final _errorProvider = FutureProvider.family.autoDispose((ref, key) => ref
 
 /// Obscure Password Check Provider
 final _obscureProvider = FutureProvider.autoDispose((ref) => ref.watch(
-    _stateProvider
-        .selectAsync((state) => state.formValues[SignInBloc.kIsObscureKey])));
+    _stateProvider.selectAsync(
+        (state) => state.formValues[SignInBlocFormKeys.isObscure])));
 
 /// Valid Inputs Check Provider
 final _validInputProvider = FutureProvider.autoDispose(
@@ -39,9 +39,9 @@ class SignInPage extends ConsumerWidget {
     final bloc = ref.watch(_blocProvider);
 
     final emailError =
-        ref.watch(_errorProvider(SignInBloc.kEmailKey)).valueOrNull;
+        ref.watch(_errorProvider(SignInBlocFormKeys.email)).valueOrNull;
     final passwordError =
-        ref.watch(_errorProvider(SignInBloc.kPasswordKey)).valueOrNull;
+        ref.watch(_errorProvider(SignInBlocFormKeys.password)).valueOrNull;
 
     return StreamListener(
       stream: ref.watch(_blocProvider).stream,
@@ -64,7 +64,7 @@ class SignInPage extends ConsumerWidget {
             children: [
               InputField(
                 onChanged: (value) => bloc.add(OnFormValueUpdateEvent(
-                    key: SignInBloc.kEmailKey, value: value)),
+                    key: SignInBlocFormKeys.email, value: value)),
                 errorText: emailError,
                 labelText: 'Email ID',
                 hintText: 'for e.g., abc@xyz.com',
@@ -72,14 +72,14 @@ class SignInPage extends ConsumerWidget {
               const VerticalSpacing(),
               InputField(
                 onChanged: (value) => bloc.add(OnFormValueUpdateEvent(
-                    key: SignInBloc.kPasswordKey, value: value)),
+                    key: SignInBlocFormKeys.password, value: value)),
                 errorText: passwordError,
                 suffixIcon: InkWell(
                   child: ref.watch(_obscureProvider).value ?? true
                       ? const Icon(Icons.visibility_off)
                       : const Icon(Icons.visibility),
                   onTap: () => bloc.add(const OnFormValueUpdateEvent(
-                      key: SignInBloc.kIsObscureKey, isToggle: true)),
+                      key: SignInBlocFormKeys.isObscure, isToggle: true)),
                 ),
                 obscureText: ref.watch(_obscureProvider).valueOrNull,
                 labelText: 'Password',
@@ -103,7 +103,7 @@ class SignInPage extends ConsumerWidget {
                     style: const TextStyle(color: Colors.black, fontSize: 12),
                     children: [
                       TextSpan(
-                          text: ' Sign In ',
+                          text: ' Sign Up ',
                           style: const TextStyle(color: Colors.blue),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {

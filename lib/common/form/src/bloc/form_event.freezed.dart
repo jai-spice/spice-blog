@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'form_bloc.dart';
+part of form;
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,138 +15,25 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$FormState {
-  Map<String, dynamic> get formValues => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $FormStateCopyWith<FormState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $FormStateCopyWith<$Res> {
-  factory $FormStateCopyWith(FormState value, $Res Function(FormState) then) =
-      _$FormStateCopyWithImpl<$Res>;
-  $Res call({Map<String, dynamic> formValues});
-}
-
-/// @nodoc
-class _$FormStateCopyWithImpl<$Res> implements $FormStateCopyWith<$Res> {
-  _$FormStateCopyWithImpl(this._value, this._then);
-
-  final FormState _value;
-  // ignore: unused_field
-  final $Res Function(FormState) _then;
-
-  @override
-  $Res call({
-    Object? formValues = freezed,
-  }) {
-    return _then(_value.copyWith(
-      formValues: formValues == freezed
-          ? _value.formValues
-          : formValues // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ));
-  }
-}
-
-/// @nodoc
-abstract class _$$_FormStateCopyWith<$Res> implements $FormStateCopyWith<$Res> {
-  factory _$$_FormStateCopyWith(
-          _$_FormState value, $Res Function(_$_FormState) then) =
-      __$$_FormStateCopyWithImpl<$Res>;
-  @override
-  $Res call({Map<String, dynamic> formValues});
-}
-
-/// @nodoc
-class __$$_FormStateCopyWithImpl<$Res> extends _$FormStateCopyWithImpl<$Res>
-    implements _$$_FormStateCopyWith<$Res> {
-  __$$_FormStateCopyWithImpl(
-      _$_FormState _value, $Res Function(_$_FormState) _then)
-      : super(_value, (v) => _then(v as _$_FormState));
-
-  @override
-  _$_FormState get _value => super._value as _$_FormState;
-
-  @override
-  $Res call({
-    Object? formValues = freezed,
-  }) {
-    return _then(_$_FormState(
-      formValues == freezed
-          ? _value.formValues
-          : formValues // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_FormState extends _FormState {
-  _$_FormState(this.formValues) : super._();
-
-  @override
-  final Map<String, dynamic> formValues;
-
-  @override
-  String toString() {
-    return 'FormState(formValues: $formValues)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_FormState &&
-            const DeepCollectionEquality()
-                .equals(other.formValues, formValues));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(formValues));
-
-  @JsonKey(ignore: true)
-  @override
-  _$$_FormStateCopyWith<_$_FormState> get copyWith =>
-      __$$_FormStateCopyWithImpl<_$_FormState>(this, _$identity);
-}
-
-abstract class _FormState extends FormState {
-  factory _FormState(final Map<String, dynamic> formValues) = _$_FormState;
-  _FormState._() : super._();
-
-  @override
-  Map<String, dynamic> get formValues;
-  @override
-  @JsonKey(ignore: true)
-  _$$_FormStateCopyWith<_$_FormState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
 mixin _$FormEvent<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() onLoad,
-    required TResult Function(String key, T? value, bool isToggle) onUpdate,
+    required TResult Function(Enum key, T? value, bool isToggle) onUpdate,
     required TResult Function() onSubmit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
     required TResult orElse(),
   }) =>
@@ -233,7 +120,7 @@ class _$OnFormLoadEvent<T> implements OnFormLoadEvent<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() onLoad,
-    required TResult Function(String key, T? value, bool isToggle) onUpdate,
+    required TResult Function(Enum key, T? value, bool isToggle) onUpdate,
     required TResult Function() onSubmit,
   }) {
     return onLoad();
@@ -243,7 +130,7 @@ class _$OnFormLoadEvent<T> implements OnFormLoadEvent<T> {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
   }) {
     return onLoad?.call();
@@ -253,7 +140,7 @@ class _$OnFormLoadEvent<T> implements OnFormLoadEvent<T> {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
     required TResult orElse(),
   }) {
@@ -307,7 +194,7 @@ abstract class _$$OnFormValueUpdateEventCopyWith<T, $Res> {
   factory _$$OnFormValueUpdateEventCopyWith(_$OnFormValueUpdateEvent<T> value,
           $Res Function(_$OnFormValueUpdateEvent<T>) then) =
       __$$OnFormValueUpdateEventCopyWithImpl<T, $Res>;
-  $Res call({String key, T? value, bool isToggle});
+  $Res call({Enum key, T? value, bool isToggle});
 }
 
 /// @nodoc
@@ -332,7 +219,7 @@ class __$$OnFormValueUpdateEventCopyWithImpl<T, $Res>
       key: key == freezed
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Enum,
       value: value == freezed
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -352,7 +239,7 @@ class _$OnFormValueUpdateEvent<T> implements OnFormValueUpdateEvent<T> {
       {required this.key, this.value, this.isToggle = false});
 
   @override
-  final String key;
+  final Enum key;
   @override
   final T? value;
   @override
@@ -391,7 +278,7 @@ class _$OnFormValueUpdateEvent<T> implements OnFormValueUpdateEvent<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() onLoad,
-    required TResult Function(String key, T? value, bool isToggle) onUpdate,
+    required TResult Function(Enum key, T? value, bool isToggle) onUpdate,
     required TResult Function() onSubmit,
   }) {
     return onUpdate(key, value, isToggle);
@@ -401,7 +288,7 @@ class _$OnFormValueUpdateEvent<T> implements OnFormValueUpdateEvent<T> {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
   }) {
     return onUpdate?.call(key, value, isToggle);
@@ -411,7 +298,7 @@ class _$OnFormValueUpdateEvent<T> implements OnFormValueUpdateEvent<T> {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
     required TResult orElse(),
   }) {
@@ -458,11 +345,11 @@ class _$OnFormValueUpdateEvent<T> implements OnFormValueUpdateEvent<T> {
 
 abstract class OnFormValueUpdateEvent<T> implements FormEvent<T> {
   const factory OnFormValueUpdateEvent(
-      {required final String key,
+      {required final Enum key,
       final T? value,
       final bool isToggle}) = _$OnFormValueUpdateEvent<T>;
 
-  String get key;
+  Enum get key;
   T? get value;
   bool get isToggle;
   @JsonKey(ignore: true)
@@ -512,7 +399,7 @@ class _$OnFormSubmitEvent<T> implements OnFormSubmitEvent<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() onLoad,
-    required TResult Function(String key, T? value, bool isToggle) onUpdate,
+    required TResult Function(Enum key, T? value, bool isToggle) onUpdate,
     required TResult Function() onSubmit,
   }) {
     return onSubmit();
@@ -522,7 +409,7 @@ class _$OnFormSubmitEvent<T> implements OnFormSubmitEvent<T> {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
   }) {
     return onSubmit?.call();
@@ -532,7 +419,7 @@ class _$OnFormSubmitEvent<T> implements OnFormSubmitEvent<T> {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? onLoad,
-    TResult Function(String key, T? value, bool isToggle)? onUpdate,
+    TResult Function(Enum key, T? value, bool isToggle)? onUpdate,
     TResult Function()? onSubmit,
     required TResult orElse(),
   }) {

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/logic/sign_up_bloc.dart';
 import 'package:spice_blog/auth/screens/dynamic_sign_in.dart';
-import 'package:spice_blog/common/utils/form_bloc.dart';
-import 'package:spice_blog/common/utils/value_object.dart';
+import 'package:spice_blog/common/form/form.dart';
 import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/stream_listener.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
@@ -40,30 +39,40 @@ class SignUpPage extends ConsumerWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const VerticalSpacing(),
-              const StreamedInputWidget(
-                  label: 'First Name', valueKey: SignUpBloc.FIRST_NAME_KEY),
+              StreamedFormInputField(
+                labelText: 'First Name',
+                valueKey: SignUpFormKeys.firstName,
+                blocProvider: blocProvider,
+              ),
               const VerticalSpacing(),
-              const StreamedInputWidget(
-                  label: 'Last Name', valueKey: SignUpBloc.LAST_NAME_KEY),
+              StreamedFormInputField(
+                labelText: 'Last Name',
+                valueKey: SignUpFormKeys.lastName,
+                blocProvider: blocProvider,
+              ),
               const VerticalSpacing(),
-              const StreamedInputWidget(
-                  label: 'Email', valueKey: SignUpBloc.EMAIL_KEY),
+              StreamedFormInputField(
+                labelText: 'Email',
+                valueKey: SignUpFormKeys.email,
+                blocProvider: blocProvider,
+              ),
               const VerticalSpacing(),
               StreamBuilder<bool?>(
                   initialData: true,
                   stream: bloc.stream.map(
-                      (event) => event.formValues[SignUpBloc.IS_OBSCURE_KEY]),
+                      (event) => event.formValues[SignUpFormKeys.isObscure]),
                   builder: (context, obscureSnap) {
-                    return StreamedInputWidget(
-                      label: 'Password',
-                      valueKey: SignUpBloc.PASSWORD_KEY,
+                    return StreamedFormInputField(
+                      blocProvider: blocProvider,
+                      labelText: 'Password',
+                      valueKey: SignUpFormKeys.password,
                       suffixIcon: InkWell(
                         child: !obscureSnap.data!
                             ? const Icon(Icons.visibility_off)
                             : const Icon(Icons.visibility),
                         onTap: () {
                           bloc.add(const FormEvent.onUpdate(
-                              key: SignUpBloc.IS_OBSCURE_KEY, isToggle: true));
+                              key: SignUpFormKeys.isObscure, isToggle: true));
                         },
                       ),
                       obscureText: obscureSnap.data,
@@ -96,11 +105,11 @@ class SignUpPage extends ConsumerWidget {
                           style: const TextStyle(color: Colors.blue),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // Navigator.of(context).pushReplacement(
-                              //   MaterialPageRoute(
-                              //       builder: (context) => const SignInPage(),
-                              //       ),
-                              // );
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const SignInPage(),
+                                ),
+                              );
                             }),
                       const TextSpan(text: 'instead.'),
                     ]),
@@ -110,40 +119,5 @@ class SignUpPage extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class StreamedInputWidget extends ConsumerWidget {
-  const StreamedInputWidget({
-    Key? key,
-    required this.valueKey,
-    required this.label,
-    this.obscureText,
-    this.suffixIcon,
-  }) : super(key: key);
-
-  final String valueKey;
-  final String label;
-  final Widget? suffixIcon;
-  final bool? obscureText;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return StreamBuilder<ValueObject?>(
-        stream: ref
-            .read(blocProvider)
-            .stream
-            .map((event) => event.formValues[valueKey]),
-        builder: (context, snapshot) {
-          return InputField(
-            suffixIcon: suffixIcon,
-            obscureText: obscureText,
-            onChanged: (value) => ref
-                .read(blocProvider)
-                .add(FormEvent.onUpdate(key: valueKey, value: value)),
-            labelText: label,
-            errorText: snapshot.data?.error,
-          );
-        });
   }
 }

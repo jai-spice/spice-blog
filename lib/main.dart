@@ -10,8 +10,9 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Spice Blog',
-        home: SignInPage());
+      debugShowCheckedModeBanner: false,
+      title: 'Spice Blog',
+      home: SignInPage(),
+    );
   }
 }
