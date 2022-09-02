@@ -1,75 +1,29 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Blog with EquatableMixin {
-  final int? id;
-  final String title;
-  final String content;
-  final String imageUrl;
-  final Author author;
-  final DateTime updatedAt;
+part 'models.freezed.dart';
+part 'models.g.dart';
 
-  const Blog({
-    this.id,
-    required this.title,
-    required this.content,
-    required this.imageUrl,
-    required this.author,
-    required this.updatedAt,
-  });
+typedef JSON = Map<String, dynamic>;
+// freezed + json_serializable
+// json - json_serializable
 
-  Map toJson() => {
-        'title': title,
-        'content': content,
-        'imageUrl': Uri.encodeFull(imageUrl),
-        'email': Uri.encodeFull(author.email),
-      };
+@freezed
+class Blog with _$Blog {
+  const factory Blog({
+    @JsonKey(includeIfNull: false) int? id,
+    required String title,
+    required String content,
+    required String imageUrl,
+    required Author author,
+    required DateTime updatedAt,
+  }) = _Blog;
 
-  factory Blog.fromJson(Map<String, dynamic> json) => Blog(
-        id: json['id'],
-        title: json['title'],
-        content: json['content'],
-        imageUrl: json['imageurl'],
-        author: Author(email: json['email'], photoUrl: ""),
-        updatedAt: DateTime.parse(json["updatedat"]),
-      );
-
-  Blog copyWith({
-    int? id,
-    String? title,
-    String? content,
-    String? imageUrl,
-    Author? author,
-    DateTime? updatedAt,
-  }) =>
-      Blog(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        content: content ?? this.content,
-        imageUrl: imageUrl ?? this.imageUrl,
-        author: author ?? this.author,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-
-  @override
-  List<Object?> get props => [id, title, content, imageUrl, author, updatedAt];
-
-  @override
-  String toString() {
-    final map = toJson();
-    map['id'] = id;
-    return map.toString();
-  }
+  factory Blog.fromJson(JSON json) => _$BlogFromJson(json);
 }
 
-class Author with EquatableMixin {
-  final String email;
-  final String photoUrl;
-
-  const Author({
-    required this.email,
-    required this.photoUrl,
-  });
-
-  @override
-  List<Object?> get props => [email, photoUrl];
+@freezed
+class Author with _$Author {
+  const factory Author({required String email, required String photoUrl}) =
+      _Author;
+  factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 }
