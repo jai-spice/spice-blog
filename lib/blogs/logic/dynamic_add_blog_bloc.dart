@@ -12,13 +12,11 @@ class AddBlogBloc extends FormBloc {
   final Ref _ref;
 
   AddBlogBloc(this._ref)
-      : super(
-          FormState({
-            AddBlogFormKeys.title: null,
-            AddBlogFormKeys.imgUrl: const Url(),
-            AddBlogFormKeys.content: null
-          }),
-        );
+      : super(FormState({
+          AddBlogFormKeys.title: null,
+          AddBlogFormKeys.imgUrl: const Url(),
+          AddBlogFormKeys.content: null
+        }));
 
   @override
   void handleOnFormLoadEvent(OnFormLoadEvent event) {}
