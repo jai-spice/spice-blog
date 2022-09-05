@@ -16,14 +16,35 @@ enum SignUpFormKeys {
 class SignUpBloc extends FormBloc {
   final Ref _ref;
 
-  SignUpBloc(this._ref)
-      : super(FormState({
-          SignUpFormKeys.firstName: const Name(),
-          SignUpFormKeys.lastName: const Name(),
-          SignUpFormKeys.email: const Email(),
-          SignUpFormKeys.password: const Password(),
-          SignUpFormKeys.isObscure: true,
-        }));
+  static const _formFields = {
+    SignUpFormKeys.firstName: FormField<Name>(
+        key: SignUpFormKeys.firstName,
+        value: Name(),
+        label: 'First name',
+        type: FieldType.text),
+    SignUpFormKeys.lastName: FormField<Name>(
+        key: SignUpFormKeys.lastName,
+        value: Name(),
+        label: 'Last Name',
+        type: FieldType.text),
+    SignUpFormKeys.email: FormField<Email>(
+        key: SignUpFormKeys.email,
+        value: Email(),
+        label: 'Email',
+        type: FieldType.text),
+    SignUpFormKeys.password: FormField<Password>(
+        key: SignUpFormKeys.email,
+        value: Password(),
+        label: 'Password',
+        type: FieldType.text),
+    SignUpFormKeys.isObscure: FormField<bool>(
+        key: SignUpFormKeys.isObscure,
+        value: false,
+        label: 'Password',
+        type: FieldType.text),
+  };
+
+  SignUpBloc(this._ref) : super(const FormState(_formFields));
 
   @override
   FutureOr<void> handleOnFormLoadEvent(OnFormLoadEvent event) {
@@ -33,10 +54,10 @@ class SignUpBloc extends FormBloc {
   @override
   Future<void> handleOnFormSubmitEvent(OnFormSubmitEvent event) async {
     final success = await _ref.read(authRepoProvider).signUp(
-          email: state.formValues[SignUpFormKeys.email].value!,
-          password: state.formValues[SignUpFormKeys.password].value!,
-          firstName: state.formValues[SignUpFormKeys.firstName].value!,
-          lastName: state.formValues[SignUpFormKeys.lastName].value!,
+          email: state.fields[SignUpFormKeys.email]!.value!,
+          password: state.fields[SignUpFormKeys.password]!.value!,
+          firstName: state.fields[SignUpFormKeys.firstName]!.value!,
+          lastName: state.fields[SignUpFormKeys.lastName]!.value!,
         );
 
     if (success) {

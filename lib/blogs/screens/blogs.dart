@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spice_blog/blogs/logic/blog_feed_bloc.dart';
-import 'package:spice_blog/blogs/logic/blog_feed_event.dart';
+import 'package:spice_blog/blogs/logic/blog_feed_bloc/blog_feed_bloc.dart';
+import 'package:spice_blog/blogs/logic/blog_feed_bloc/blog_feed_event.dart';
 import 'package:spice_blog/blogs/screens/add_blog.dart';
 import 'package:spice_blog/blogs/screens/blog_details.dart';
 

@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Form;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spice_blog/blogs/logic/add_bloc_bloc/add_blog_bloc.dart';
-import 'package:spice_blog/blogs/logic/add_bloc_bloc/add_blog_event.dart';
-import 'package:spice_blog/common/widgets/input_field.dart';
+import 'package:logger/logger.dart';
+import 'package:spice_blog/blogs/logic/add_blog_bloc/add_blog_bloc.dart';
+import 'package:spice_blog/common/form/form.dart';
 import 'package:spice_blog/common/widgets/stream_listener.dart';
-import 'package:spice_blog/common/widgets/vertical_spacing.dart';
-import 'package:spice_blog/common/utils/string_ext.dart';
 
-final _blocProvider = Provider.autoDispose(AddBlogBloc.new);
+final _blocProvider = Provider(AddBlogBloc.new);
 
 class AddBlogPage extends ConsumerWidget {
   const AddBlogPage({Key? key}) : super(key: key);
@@ -18,7 +16,9 @@ class AddBlogPage extends ConsumerWidget {
     return StreamListener(
       stream: bloc.stream,
       onDone: Navigator.of(context).pop,
+      onError: (error) => Logger().wtf(error),
       child: Scaffold(
+        appBar: AppBar(),
         body: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -32,43 +32,15 @@ class AddBlogPage extends ConsumerWidget {
                   'Add Blog',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                const VerticalSpacing(),
-                StreamedInputField(
-                  addValue: (value) =>
-                      bloc.add(AddBlogEvent.onUpdateTitle(value: value)),
-                  title: 'Title',
-                  stream: bloc.stream.map((event) => event.title),
-                ),
-                const VerticalSpacing(),
-                StreamedInputField(
-                  addValue: (value) =>
-                      bloc.add(AddBlogEvent.onUpdateContent(value: value)),
-                  stream: bloc.stream.map((event) => event.content),
-                  title: 'Content',
-                ),
-                const VerticalSpacing(),
-                StreamedInputField(
-                  addValue: (value) =>
-                      bloc.add(AddBlogEvent.onUpdateImgUrl(value: value)),
-                  stream: bloc.stream.map((event) => event.imgUrl),
-                  title: 'Image Url',
-                ),
-                const VerticalSpacing(),
+                Form(bloc),
                 StreamBuilder<bool>(
-                    stream: bloc.stream.map(
-                      (event) =>
-                          !event.title.isNullOrEmpty &&
-                          !event.imgUrl.isNullOrEmpty &&
-                          !event.content.isNullOrEmpty,
-                    ),
+                    stream: bloc.stream.map((event) => event.isValid()),
                     builder: (context, snapshot) {
                       final isValid = snapshot.data ?? false;
                       return ElevatedButton(
                           onPressed: !isValid
                               ? null
-                              : () {
-                                  bloc.add(AddBlogEvent.onSubmit());
-                                },
+                              : () => bloc.add(const FormEvent.onSubmit()),
                           child: const Text('Add Blog'));
                     })
               ],
@@ -77,32 +49,5 @@ class AddBlogPage extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class StreamedInputField<T> extends StatelessWidget {
-  final Stream<T> stream;
-  final Function(String?) addValue;
-  final String title;
-
-  const StreamedInputField({
-    Key? key,
-    required this.stream,
-    required this.addValue,
-    required this.title,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<T>(
-        stream: stream,
-        builder: (context, snapshot) {
-          return InputField(
-            onChanged: (value) => addValue(value),
-            hintText: title,
-            labelText: title,
-            errorText: snapshot.error as String?,
-          );
-        });
   }
 }
