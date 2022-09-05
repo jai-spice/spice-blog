@@ -32,7 +32,7 @@ void main() {
     when(bloc.validInputObs$).thenAnswer((_) =>
         Rx.combineLatest2(bloc.email.obs$, bloc.password.obs$, (a, b) => true));
     when(bloc.signIn()).thenAnswer((_) => Future.value(
-        bloc.email.value == 'jai.sachdeva@spicemoney.com' &&
+        bloc.email.value == 'jai.s@q.com' &&
             bloc.password.value == 'qwerty12'));
     //
     final mockObserver = MockNavigatorObserver();
@@ -68,7 +68,7 @@ void main() {
     await tester.pumpAndSettle(); // setState
     expect(find.text('User not found', skipOffstage: false), findsOneWidget);
 
-    await tester.enterText(emailInput, 'jai.sachdeva@spicemoney.com');
+    await tester.enterText(emailInput, 'jai.s@q.com');
     await tester.enterText(
         find.byKey(const ValueKey('password_input_field')), 'qwerty12');
     await tester.pumpAndSettle(); // setState

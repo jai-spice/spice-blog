@@ -18,11 +18,9 @@ class MockAuthRepo implements IAuthRepository {
   @override
   Future<User?> signIn(
       {required String email, required String password}) async {
-    if (email == "jai.sachdeva@spicemoney.com" && password == "qwerty12") {
+    if (email == "jai.s@q.com" && password == "qwerty12") {
       _user = const User(
-          email: "jai.sachdeva@spicemoney.com",
-          firstName: "Jai",
-          lastName: "Sachdeva");
+          email: "jai.s@q.com", firstName: "Jai", lastName: "Sachdeva");
 
       return _user;
     }
