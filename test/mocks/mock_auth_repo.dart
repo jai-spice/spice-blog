@@ -14,13 +14,10 @@ MockIAuthRepository createRepo() {
   final repo = MockIAuthRepository();
 
   when(repo.signIn()).thenAnswer((realInvocation) async {
-    if (realInvocation.namedArguments['email'] ==
-            "jai.sachdeva@spicemoney.com" &&
+    if (realInvocation.namedArguments['email'] == "jai.s@q.com" &&
         realInvocation.namedArguments['password'] == "qwerty12") {
       return const User(
-          email: "jai.sachdeva@spicemoney.com",
-          firstName: "Jai",
-          lastName: "Sachdeva");
+          email: "jai.s@q.com", firstName: "Jai", lastName: "Sachdeva");
     }
     return null;
   });
