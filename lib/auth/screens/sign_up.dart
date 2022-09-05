@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Form;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spice_blog/auth/logic/sign_up_bloc.dart';
 import 'package:spice_blog/auth/screens/dynamic_sign_in.dart';
 import 'package:spice_blog/common/form/form.dart';
-import 'package:spice_blog/common/widgets/input_field.dart';
 import 'package:spice_blog/common/widgets/stream_listener.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
+import 'package:spice_blog/common/form/form.dart';
 
 final blocProvider = Provider(SignUpBloc.new);
 
@@ -39,46 +39,7 @@ class SignUpPage extends ConsumerWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const VerticalSpacing(),
-              StreamedFormInputField(
-                labelText: 'First Name',
-                valueKey: SignUpFormKeys.firstName,
-                blocProvider: blocProvider,
-              ),
-              const VerticalSpacing(),
-              StreamedFormInputField(
-                labelText: 'Last Name',
-                valueKey: SignUpFormKeys.lastName,
-                blocProvider: blocProvider,
-              ),
-              const VerticalSpacing(),
-              StreamedFormInputField(
-                labelText: 'Email',
-                valueKey: SignUpFormKeys.email,
-                blocProvider: blocProvider,
-              ),
-              const VerticalSpacing(),
-              StreamBuilder<bool?>(
-                  initialData: true,
-                  stream: bloc.stream.map(
-                      (event) => event.formValues[SignUpFormKeys.isObscure]),
-                  builder: (context, obscureSnap) {
-                    return StreamedFormInputField(
-                      blocProvider: blocProvider,
-                      labelText: 'Password',
-                      valueKey: SignUpFormKeys.password,
-                      suffixIcon: InkWell(
-                        child: !obscureSnap.data!
-                            ? const Icon(Icons.visibility_off)
-                            : const Icon(Icons.visibility),
-                        onTap: () {
-                          bloc.add(const FormEvent.onUpdate(
-                              key: SignUpFormKeys.isObscure, isToggle: true));
-                        },
-                      ),
-                      obscureText: obscureSnap.data,
-                    );
-                  }),
-              const VerticalSpacing(),
+              Form(bloc),
               StreamBuilder<bool>(
                   stream: bloc.stream.map((event) => event.isValid()),
                   builder: (context, snapshot) {

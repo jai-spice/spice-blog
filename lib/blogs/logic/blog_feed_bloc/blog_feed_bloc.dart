@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spice_blog/blogs/logic/blog_feed_event.dart';
-import 'package:spice_blog/blogs/logic/blog_feed_state.dart';
 import 'package:spice_blog/common/base_classes/bloc_base.dart';
 import 'package:spice_blog/di.dart';
+
+import 'blog_feed_event.dart';
+import 'blog_feed_state.dart';
 
 class BlogFeedBloc extends Bloc<BlogFeedEvent, BlogFeedState> {
   final Ref _ref;

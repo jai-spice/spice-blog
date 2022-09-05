@@ -18,13 +18,14 @@ final _stateProvider =
     StreamProvider.autoDispose((ref) => ref.watch(_blocProvider).stream);
 
 /// Error Providers
-final _errorProvider = FutureProvider.family.autoDispose((ref, key) => ref
-    .watch(_stateProvider.selectAsync((state) => state.formValues[key].error)));
+final _errorProvider = FutureProvider.family.autoDispose((ref, Enum key) =>
+    ref.watch(
+        _stateProvider.selectAsync((state) => state.fields[key]!.value.error)));
 
 /// Obscure Password Check Provider
 final _obscureProvider = FutureProvider.autoDispose((ref) => ref.watch(
-    _stateProvider.selectAsync(
-        (state) => state.formValues[SignInBlocFormKeys.isObscure])));
+    _stateProvider
+        .selectAsync((state) => state.fields[SignInBlocFormKeys.isObscure])));
 
 /// Valid Inputs Check Provider
 final _validInputProvider = FutureProvider.autoDispose(
@@ -75,13 +76,13 @@ class SignInPage extends ConsumerWidget {
                     key: SignInBlocFormKeys.password, value: value)),
                 errorText: passwordError,
                 suffixIcon: InkWell(
-                  child: ref.watch(_obscureProvider).value ?? true
+                  child: ref.watch(_obscureProvider).value?.value ?? true
                       ? const Icon(Icons.visibility_off)
                       : const Icon(Icons.visibility),
                   onTap: () => bloc.add(const OnFormValueUpdateEvent(
                       key: SignInBlocFormKeys.isObscure, isToggle: true)),
                 ),
-                obscureText: ref.watch(_obscureProvider).valueOrNull,
+                obscureText: ref.watch(_obscureProvider).value?.value,
                 labelText: 'Password',
                 hintText: 'Must be more than 8 characters in length',
               ),

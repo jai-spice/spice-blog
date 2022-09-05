@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart' show mustCallSuper;
 import 'package:spice_blog/common/base_classes/bloc_base.dart';
 import 'package:spice_blog/common/base_classes/value_object.dart';
+import 'package:spice_blog/common/form/src/bloc/form_field.dart';
 
 import 'form_event.dart';
 import 'form_state.dart';
@@ -25,17 +26,19 @@ abstract class FormBloc extends Bloc<FormEvent, FormState> {
 
   @mustCallSuper
   FutureOr<void> handleOnFormValueUpdatedEvent(OnFormValueUpdateEvent event) {
-    final formValues = state.formValues;
-    final value = formValues[event.key];
+    final fields = Map<Enum, FormField>.from(state.fields);
+    final field = fields[event.key];
+    final value = field?.value;
     if (value is ValueObject) {
-      formValues[event.key] = value.copyWith(value: event.value);
+      fields[event.key] =
+          field!.copyWith(value: value.copyWith(value: event.value));
     } else {
       if (event.isToggle) {
-        formValues[event.key] = !formValues[event.key];
+        fields[event.key] = field!.copyWith(value: !(value as bool));
       } else {
-        formValues[event.key] = event.value;
+        fields[event.key] = event.value;
       }
     }
-    emit(FormState(formValues));
+    emit(FormState(fields));
   }
 }
