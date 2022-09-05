@@ -53,7 +53,7 @@ void main() {
     await tester.pumpAndSettle(); // setState
     expect(find.text('User not found', skipOffstage: false), findsOneWidget);
 
-    await tester.enterText(emailInput, 'jai.sachdeva@spicemoney.com');
+    await tester.enterText(emailInput, 'jai.s@q.com');
     await tester.enterText(
         find.byKey(const ValueKey('password_input_field')), 'qwerty12');
     await tester.pumpAndSettle(); // setState

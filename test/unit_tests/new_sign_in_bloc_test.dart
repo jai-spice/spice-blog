@@ -4,8 +4,7 @@
 // import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 // import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_event.dart';
 // import 'package:spice_blog/auth/logic/sign_in_bloc/sign_in_state.dart';
-// import 'package:spice_blog/common/value_objects/email.dart';
-// import 'package:spice_blog/common/value_objects/password.dart';
+// import 'package:spice_blog/common/form/form.dart';
 // import 'package:spice_blog/di.dart';
 
 // import '../mocks/mock_auth_repo.dart';
@@ -21,16 +20,16 @@
 //     final listener = Listener();
 //     container.listen(authRepoProvider, listener, fireImmediately: true);
 //     listener(null, mockAuthRepo);
-//     test('Initial state', () async {
-//       final bloc = SignInBloc(container.read(authRepoProvider));
-//       await expectLater(bloc.stream, emitsInOrder([isA<SignInFormState>()]));
-//       expect(bloc.state, equals(SignInFormState()));
-//     });
+//     // test('Initial state', () async {
+//     //   const bloc = SignInBloc.new;
+//     //   await expectLater(bloc.stream, emitsInOrder([isA<SignInFormState>()]));
+//     //   expect(bloc.state, equals(SignInFormState()));
+//     // });
 
 //     test('Valid Input Test', () async {
 //       final signInFormState = SignInFormState();
-//       final signInFormStateWithEmail = signInFormState.copyWith(
-//           email: const Email("jai.sachdeva@spicemoney.com"));
+//       final signInFormStateWithEmail =
+//           signInFormState.copyWith(email: const Email("j.s@q.com"));
 //       final signInFormStateWithValidInput = signInFormStateWithEmail.copyWith(
 //           password: const Password("qwerty12"));
 //       final signInFormStateWithComplete =
@@ -38,7 +37,7 @@
 
 //       final SignInBloc bloc = SignInBloc(container.read(authRepoProvider));
 //       bloc
-//         ..add(const UpdateEmailEvent("jai.sachdeva@spicemoney.com"))
+//         ..add(const UpdateEmailEvent("j.s@q.com"))
 //         ..add(const UpdatePasswordEvent("qwerty12"))
 //         ..add(SignInPressedEvent());
 
@@ -55,7 +54,7 @@
 //     test('Wrong Credentials Test', () async {
 //       final signInFormState = SignInFormState();
 //       final signInFormStateWithEmail = signInFormState.copyWith(
-//           email: const Email("jai.sach@spicemoney.com"));
+//           email: const Email("j2.s@q.com"));
 //       final signInFormStateWithValidInput = signInFormStateWithEmail.copyWith(
 //           password: const Password("qwerty12"));
 //       final signInFormStateWithError =
@@ -63,7 +62,7 @@
 
 //       final SignInBloc bloc = SignInBloc(container.read(authRepoProvider));
 //       bloc
-//         ..add(const UpdateEmailEvent("jai.sach@spicemoney.com"))
+//         ..add(const UpdateEmailEvent("j2.s@q.com"))
 //         ..add(const UpdatePasswordEvent("qwerty12"))
 //         ..add(SignInPressedEvent());
 

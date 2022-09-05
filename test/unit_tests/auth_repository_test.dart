@@ -10,11 +10,11 @@ void main() {
     test('login test', () async {
       expect(await repo.signIn(email: '', password: ''), null);
 
-      final actual = await repo.signIn(
-          email: 'jai.sachdeva@spicemoney.com', password: 'qwerty12');
+      final actual =
+          await repo.signIn(email: 'jai.s@q.com', password: 'qwerty12');
 
       const expected = User(
-        email: "jai.sachdeva@spicemoney.com",
+        email: "jai.s@q.com",
         firstName: "Jai",
         lastName: "Sachdeva",
       );
