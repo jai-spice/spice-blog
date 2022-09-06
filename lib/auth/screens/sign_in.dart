@@ -34,6 +34,8 @@ final _validInputProvider = FutureProvider.autoDispose((ref) => ref.watch(
 
 /////////////
 class SignInPage extends ConsumerWidget {
+  static const String route = '/';
+
   const SignInPage({Key? key}) : super(key: key);
 
   @override

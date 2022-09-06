@@ -10,6 +10,8 @@ import 'package:spice_blog/common/widgets/vertical_spacing.dart';
 final blocProvider = Provider(SignUpBloc.new);
 
 class SignUpPage extends ConsumerWidget {
+  static const String route = '/signup';
+
   const SignUpPage({Key? key}) : super(key: key);
 
   @override

@@ -7,6 +7,8 @@ class BlogDetails extends StatelessWidget {
   final Blog blog;
   const BlogDetails({Key? key, required this.blog}) : super(key: key);
 
+  static const String route = 'details';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
