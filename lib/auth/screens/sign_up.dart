@@ -1,12 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Form;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spice_blog/auth/logic/sign_up_bloc.dart';
-import 'package:spice_blog/auth/screens/dynamic_sign_in.dart';
 import 'package:spice_blog/common/form/form.dart';
 import 'package:spice_blog/common/widgets/stream_listener.dart';
 import 'package:spice_blog/common/widgets/vertical_spacing.dart';
-import 'package:spice_blog/common/form/form.dart';
 
 final blocProvider = Provider(SignUpBloc.new);
 
@@ -18,10 +17,7 @@ class SignUpPage extends ConsumerWidget {
     final bloc = ref.watch(blocProvider);
     return StreamListener(
       stream: bloc.stream,
-      onDone: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const SignInPage()));
-      },
+      onDone: () => context.go('/'),
       onError: (error) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("$error")));
@@ -65,13 +61,7 @@ class SignUpPage extends ConsumerWidget {
                           text: ' Sign In ',
                           style: const TextStyle(color: Colors.blue),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const SignInPage(),
-                                ),
-                              );
-                            }),
+                            ..onTap = () => context.go('/')),
                       const TextSpan(text: 'instead.'),
                     ]),
               ),

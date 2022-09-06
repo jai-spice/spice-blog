@@ -29,7 +29,10 @@ class BlogDetails extends StatelessWidget {
                 const SizedBox(
                   width: 48,
                 ),
-                Text('by ${blog.author.email}')
+                Text(
+                  'by ${blog.author.email}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
               ],
             ),
             const VerticalSpacing(),
