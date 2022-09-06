@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -19,10 +17,14 @@ class MyApp extends ConsumerWidget {
   MyApp({Key? key}) : super(key: key);
 
   final _router = GoRouter(routes: [
-    GoRoute(path: '/', builder: (context, state) => const SignInPage()),
-    GoRoute(path: '/signup', builder: (context, state) => const SignUpPage()),
     GoRoute(
-        path: '/blogs',
+        path: SignInPage.route,
+        builder: (context, state) => const SignInPage()),
+    GoRoute(
+        path: SignUpPage.route,
+        builder: (context, state) => const SignUpPage()),
+    GoRoute(
+        path: BlogFeed.route,
         builder: (context, state) => const BlogFeed(),
         routes: [
           GoRoute(
@@ -30,7 +32,7 @@ class MyApp extends ConsumerWidget {
             builder: (context, state) => const AddBlogPage(),
           ),
           GoRoute(
-            path: 'details',
+            path: BlogDetails.route,
             builder: (context, state) => BlogDetails(
               blog: state.extra! as Blog,
             ),

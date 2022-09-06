@@ -13,6 +13,7 @@ final _blogFeedProvider =
 
 class BlogFeed extends ConsumerWidget {
   const BlogFeed({Key? key}) : super(key: key);
+  static const String route = '/blogs';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
