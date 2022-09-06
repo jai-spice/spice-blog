@@ -13,7 +13,7 @@ void main() {
         title: "title",
         content: "content",
         imageUrl: "imageUrl",
-        author: const Author(email: "email", photoUrl: "photoUrl"),
+        author: Author(email: "email", photoUrl: "photoUrl"),
         updatedAt: DateTime(2022),
       );
 

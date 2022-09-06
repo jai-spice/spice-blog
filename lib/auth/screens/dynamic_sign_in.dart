@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:spice_blog/auth/logic/sign_in_bloc.dart';
 import 'package:spice_blog/auth/screens/sign_up.dart';
@@ -48,11 +49,7 @@ class SignInPage extends ConsumerWidget {
       stream: ref.watch(_blocProvider).stream,
       onDone: () {
         Logger().i("Login success!");
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const BlogFeed(),
-          ),
-        );
+        GoRouter.of(context).replace('/blogs');
       },
       onError: (error) => Logger().e(error),
       child: Scaffold(
@@ -108,11 +105,7 @@ class SignInPage extends ConsumerWidget {
                           style: const TextStyle(color: Colors.blue),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUpPage(),
-                                ),
-                              );
+                              GoRouter.of(context).replace('/signup');
                             }),
                       const TextSpan(text: 'instead.'),
                     ]),

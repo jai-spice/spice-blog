@@ -26,7 +26,8 @@ class BlogRepository implements IBlogRepository {
       try {
         final data = json.decode(event);
         return data.map<Blog>((e) => Blog.fromJson(e)).toList();
-      } catch (_) {
+      } catch (e) {
+        print(e);
         return <Blog>[];
       }
     });

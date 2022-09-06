@@ -10,7 +10,7 @@ void main() {
         title: "title",
         content: "content",
         imageUrl: "imageUrl",
-        author: const Author(email: "email", photoUrl: "photoUrl"),
+        author: Author(email: "email", photoUrl: "photoUrl"),
         updatedAt: DateTime(2022),
       );
 
@@ -18,7 +18,7 @@ void main() {
         title: "title",
         content: "content",
         imageUrl: "imageUrl",
-        author: const Author(email: "email", photoUrl: "photoUrl"),
+        author: Author(email: "email", photoUrl: "photoUrl"),
         updatedAt: DateTime(2022),
       );
 
@@ -41,7 +41,7 @@ void main() {
 
       final blog = Blog.fromJson(json);
       expect(blog.author.email, "email");
-      expect(blog.author, const Author(email: "email", photoUrl: ""));
+      expect(blog.author, Author(email: "email", photoUrl: ""));
     });
   });
 }

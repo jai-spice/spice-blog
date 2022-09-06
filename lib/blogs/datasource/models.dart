@@ -13,17 +13,23 @@ class Blog with _$Blog {
     @JsonKey(includeIfNull: false) int? id,
     required String title,
     required String content,
-    required String imageUrl,
-    required Author author,
-    required DateTime updatedAt,
+    @JsonKey(name: 'imageurl') required String imageUrl,
+    @JsonKey(name: 'email', fromJson: Author.fromJson, toJson: Author.toJson)
+        required Author author,
+    @JsonKey(name: 'updatedat') required DateTime updatedAt,
   }) = _Blog;
 
   factory Blog.fromJson(JSON json) => _$BlogFromJson(json);
 }
 
-@freezed
-class Author with _$Author {
-  const factory Author({required String email, required String photoUrl}) =
-      _Author;
-  factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
+// @freezed
+class Author {
+  final String email;
+  final String photoUrl;
+  Author({required this.email, this.photoUrl = ''});
+
+  static Author fromJson(dynamic email) => Author(email: email);
+
+  static Map<String, dynamic> toJson(Object obj) => {};
+  // factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 }

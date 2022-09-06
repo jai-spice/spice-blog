@@ -8,6 +8,8 @@ import 'package:spice_blog/common/widgets/stream_listener.dart';
 final _blocProvider = Provider(AddBlogBloc.new);
 
 class AddBlogPage extends ConsumerWidget {
+  static const String route = 'add';
+
   const AddBlogPage({Key? key}) : super(key: key);
 
   @override

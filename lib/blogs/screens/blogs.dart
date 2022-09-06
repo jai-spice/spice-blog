@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spice_blog/blogs/logic/blog_feed_bloc/blog_feed_bloc.dart';
 import 'package:spice_blog/blogs/logic/blog_feed_bloc/blog_feed_event.dart';
 import 'package:spice_blog/blogs/screens/add_blog.dart';
-import 'package:spice_blog/blogs/screens/blog_details.dart';
 
 final blocProvider =
     Provider<BlogFeedBloc>((ref) => BlogFeedBloc(ref)..add(OnFeedLoadEvent()));
@@ -20,7 +20,7 @@ class BlogFeed extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'All Blogs',
+          'All Blogs ',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -28,9 +28,8 @@ class BlogFeed extends ConsumerWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddBlogPage()));
+        onPressed: () {
+          context.go('/blogs/${AddBlogPage.route}');
         },
         child: const Icon(Icons.add),
       ),
@@ -42,11 +41,7 @@ class BlogFeed extends ConsumerWidget {
                 return ListTile(
                   key: ValueKey(blog.id),
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BlogDetails(blog: blog),
-                      ),
-                    );
+                    context.go('/blogs/details', extra: blog);
                   },
                   trailing: IconButton(
                       onPressed: () => bloc.add(OnDeleteBlogEvent(blog.id!)),
