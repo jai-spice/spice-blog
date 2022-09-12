@@ -30,7 +30,7 @@ class BlogFeed extends ConsumerWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go('/blogs/${AddBlogPage.route}');
+          context.go('/${BlogFeed.route}/${AddBlogPage.route}');
         },
         child: const Icon(Icons.add),
       ),
