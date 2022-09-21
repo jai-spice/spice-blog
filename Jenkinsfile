@@ -9,6 +9,7 @@ pipeline {
         stage ('Flutter Doctor') {
             steps {
                 sh "flutter doctor"
+                sh "echo done"
             }
         }
     }
