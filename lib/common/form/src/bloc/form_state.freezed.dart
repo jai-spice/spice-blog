@@ -16,11 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$FormState {
-<<<<<<< HEAD
   Map<Enum, FormField> get fields => throw _privateConstructorUsedError;
-=======
-  Map<Enum, dynamic> get formValues => throw _privateConstructorUsedError;
->>>>>>> c217810 (Update blocs to bloc_base and form_bloc)
 
   @JsonKey(ignore: true)
   $FormStateCopyWith<FormState> get copyWith =>
