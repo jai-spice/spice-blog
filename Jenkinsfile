@@ -6,17 +6,18 @@ pipeline {
                 checkout scm
             }
         }
-        stage ('Flutter Doctor') {
-            steps {
-                sh "flutter doctor"
-            }
-        }
-        stage('Build Runner & Test') {
-            steps {
+        stage("Dependency Graph Setup"){
+            steps{
+                sh "flutter clean";
                 sh "flutter pub get"
                 sh "flutter pub run build_runner build --delete-conflicting-outputs"
+            }
+        }
+        stage('Test') {
+            steps {
                 sh "flutter test"
             }
         }
+        stage('')
     }
 }
