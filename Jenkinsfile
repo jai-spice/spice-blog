@@ -11,5 +11,12 @@ pipeline {
                 sh "flutter doctor"
             }
         }
+        stage('Build Runner & Test') {
+            steps {
+                sh "flutter pub get"
+                sh "flutter pub run build_runner build --delete-conflicting-outputs"
+                sh "flutter test"
+            }
+        }
     }
 }

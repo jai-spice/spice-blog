@@ -62,6 +62,7 @@ class SignInPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InputField(
+                key: const ValueKey('email_input_field'),
                 onChanged: (value) => bloc.add(OnFormValueUpdateEvent(
                     key: SignInBlocFormKeys.email, value: value)),
                 errorText: emailError,
@@ -70,6 +71,7 @@ class SignInPage extends ConsumerWidget {
               ),
               const VerticalSpacing(),
               InputField(
+                key: const ValueKey('password_input_field'),
                 onChanged: (value) => bloc.add(OnFormValueUpdateEvent(
                     key: SignInBlocFormKeys.password, value: value)),
                 errorText: passwordError,
@@ -86,6 +88,7 @@ class SignInPage extends ConsumerWidget {
               ),
               const VerticalSpacing(),
               ElevatedButton.icon(
+                key: const ValueKey('sign_in_submit_button'),
                 onPressed: ref.watch(_validInputProvider).value ?? false
                     ? () => bloc.add(const OnFormSubmitEvent())
                     : null,

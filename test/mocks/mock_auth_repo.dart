@@ -13,9 +13,10 @@ final mockAuthRepo = createRepo();
 MockIAuthRepository createRepo() {
   final repo = MockIAuthRepository();
 
-  when(repo.signIn()).thenAnswer((realInvocation) async {
-    if (realInvocation.namedArguments['email'] == "jai.s@q.com" &&
-        realInvocation.namedArguments['password'] == "qwerty12") {
+  when(repo.signIn(email: anyNamed('email'), password: anyNamed('password')))
+      .thenAnswer((realInvocation) async {
+    if (realInvocation.namedArguments[const Symbol('email')] == "jai.s@q.com" &&
+        realInvocation.namedArguments[const Symbol('password')] == "qwerty12") {
       return const User(
           email: "jai.s@q.com", firstName: "Jai", lastName: "Sachdeva");
     }
