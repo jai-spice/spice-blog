@@ -10,42 +10,44 @@ import 'package:spice_blog/blogs/screens/blogs.dart';
 
 void main() {
   GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
-  runApp(ProviderScope(child: MyApp()));
+  runApp(ProviderScope(
+      child: MyApp(
+    router: GoRouter(routes: [
+      GoRoute(
+          path: SignInPage.route,
+          builder: (context, state) => const SignInPage()),
+      GoRoute(
+          path: SignUpPage.route,
+          builder: (context, state) => const SignUpPage()),
+      GoRoute(
+          path: BlogFeed.route,
+          builder: (context, state) => const BlogFeed(),
+          routes: [
+            GoRoute(
+              path: AddBlogPage.route,
+              builder: (context, state) => const AddBlogPage(),
+            ),
+            GoRoute(
+              path: BlogDetails.route,
+              builder: (context, state) => BlogDetails(
+                blog: state.extra! as Blog,
+              ),
+            ),
+          ])
+    ]),
+  )));
 }
 
 class MyApp extends ConsumerWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final _router = GoRouter(routes: [
-    GoRoute(
-        path: SignInPage.route,
-        builder: (context, state) => const SignInPage()),
-    GoRoute(
-        path: SignUpPage.route,
-        builder: (context, state) => const SignUpPage()),
-    GoRoute(
-        path: BlogFeed.route,
-        builder: (context, state) => const BlogFeed(),
-        routes: [
-          GoRoute(
-            path: AddBlogPage.route,
-            builder: (context, state) => const AddBlogPage(),
-          ),
-          GoRoute(
-            path: BlogDetails.route,
-            builder: (context, state) => BlogDetails(
-              blog: state.extra! as Blog,
-            ),
-          ),
-        ])
-  ]);
+  final GoRouter router;
+  MyApp({Key? key, required this.router}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      routerDelegate: _router.routerDelegate,
-      routeInformationParser: _router.routeInformationParser,
-      routeInformationProvider: _router.routeInformationProvider,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
       debugShowCheckedModeBanner: false,
     );
   }
