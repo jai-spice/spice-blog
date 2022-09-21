@@ -8,7 +8,7 @@ pipeline {
         }
         stage ('Flutter Doctor') {
             steps {
-                sh "echo flutter"
+                sh "flutter doctor"
             }
         }
     }
