@@ -18,5 +18,11 @@ pipeline {
                 sh "flutter test"
             }
         }
+
+        stage('Build'){
+            steps {
+                sh "flutter build web"
+            }
+        }
     }
 }
